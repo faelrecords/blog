@@ -278,6 +278,15 @@ Regras:
 - hover com elevação de 4 px;
 - imagem com `object-fit: cover`.
 
+### Card relacionado lateral
+
+- imagem compacta de `88 × 72 px`;
+- título limitado visualmente a três linhas;
+- data curta acima do título;
+- separador entre itens, sem excesso de sombras;
+- bloco lateral com largura máxima de `320px` e posição fixa abaixo do cabeçalho;
+- abaixo de `980px`, o bloco passa para baixo do artigo e ocupa a largura disponível.
+
 ### Painel administrativo
 
 ```html

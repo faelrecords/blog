@@ -16,6 +16,7 @@
 | `SiteFooter` | `site-footer.tsx` | Server | Rodapé público configurável |
 | `MobileMenu` | `mobile-menu.tsx` | Client | Drawer móvel do blog |
 | `PostCard` | `post-card.tsx` | Server | Card de artigo público |
+| `RelatedPostsSidebar` | `related-posts-sidebar.tsx` | Server | Menu lateral com artigos relacionados |
 | `AdminShell` | `admin-shell.tsx` | Server | Estrutura das áreas autenticadas |
 | `AdminMobileMenu` | `admin-mobile-menu.tsx` | Client | Drawer móvel administrativo |
 | `PostEditor` | `editor.tsx` | Client | Criação e edição de artigos |
@@ -172,6 +173,21 @@ Em tabelas administrativas ou no conteúdo completo do artigo.
 ### Nomenclatura
 
 Cards de entidade usam `<Entidade>Card`.
+
+### `RelatedPostsSidebar`
+
+Exibe, à direita do artigo, até três publicações recentes, sempre excluindo o artigo atual. Publicações da mesma categoria aparecem primeiro; se não forem suficientes, a lista é completada com as mais recentes do blog. Em telas menores, o bloco deixa de ser fixo e aparece abaixo do conteúdo principal.
+
+| Prop | Tipo | Obrigatória | Descrição |
+|---|---|---:|---|
+| `posts` | `PublicPost[]` | Sim | Artigos públicos já filtrados e ordenados |
+| `categoryName` | `string \| null` | Sim | Categoria usada no título contextual |
+
+```tsx
+<RelatedPostsSidebar posts={relatedPosts} categoryName={post.category_name} />
+```
+
+Não use este componente em grades da home ou do arquivo; nesses casos use `PostCard`.
 
 ---
 

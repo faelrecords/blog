@@ -258,6 +258,8 @@ sequenceDiagram
 9. Administrador aprova, agenda ou solicita alterações.
 10. Consultas públicas filtram somente conteúdo disponível.
 
+Na página `/artigos/[slug]`, a consulta `relatedPublicPosts()` busca até três artigos públicos, exclui o artigo aberto, prioriza a mesma categoria e completa posições restantes pela data de publicação. O resultado alimenta `RelatedPostsSidebar`; sem categoria, a consulta usa diretamente as publicações recentes. O menu é lateral e fixo no desktop, passando para baixo do artigo em tablet e celular.
+
 ## 9. Fluxo do editor de aparência
 
 1. Server Component carrega `getSettings()` e `getHomeBlocks()`.
