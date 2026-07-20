@@ -1,5 +1,6 @@
 import { db } from "../lib/db";
 import { hashPassword } from "../lib/security";
+import { DEFAULT_HOME_BLOCKS, DEFAULT_THEME_SETTINGS } from "../lib/theme";
 
 const now = new Date().toISOString();
 const insertUser = db.prepare("INSERT OR IGNORE INTO users (name,username,password_hash,role,active,created_at) VALUES (?,?,?,?,1,?)");
@@ -45,16 +46,9 @@ const posts = [
 const insertPost = db.prepare(`INSERT OR IGNORE INTO posts (title,slug,excerpt,content_json,content_html,cover_image,cover_alt,status,author_id,category_id,tags_text,seo_title,seo_description,featured,published_at,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`);
 posts.forEach((post, index) => insertPost.run(post.title, post.slug, post.excerpt, JSON.stringify({ type: "doc", content: [] }), post.html, post.cover, post.title, "publicado", admin.id, categoryId[post.category], "IA, Atendimento, GTChat", post.title, post.excerpt, index === 0 ? 1 : 0, new Date(Date.now() - index * 86400000 * 3).toISOString(), now, now));
 
-const defaults: Record<string, string> = {
-  site_title: "GTChat Blog", site_description: "Estratégias, tendências e práticas para um atendimento mais inteligente.",
-  logo_text: "GTChat", primary_color: "#106e00", accent_color: "#006781", background_color: "#f8f9ff", text_color: "#0b1c30",
-  heading_font: "Hanken Grotesk", body_font: "Inter", footer_text: "Conteúdo para transformar conversas em resultados.",
-  linkedin_url: "https://linkedin.com", instagram_url: "https://instagram.com", cta_title: "Pronto para transformar seu atendimento?",
-  cta_text: "Conheça a GTChat e conecte todos os seus canais em uma experiência simples.", cta_label: "Conhecer a GTChat", cta_url: "https://vibecodex.pro",
-};
 const setSetting = db.prepare("INSERT OR IGNORE INTO site_settings (key,value) VALUES (?,?)");
-Object.entries(defaults).forEach(([key, value]) => setSetting.run(key, value));
+Object.entries(DEFAULT_THEME_SETTINGS).forEach(([key, value]) => setSetting.run(key, value));
 
 const block = db.prepare("INSERT OR IGNORE INTO home_blocks (id,type,title,enabled,position,config_json) VALUES (?,?,?,?,?,?)");
-[["hero","hero","Artigo em destaque",1,0,"{}"],["latest","latest","Últimas publicações",1,1,"{}"],["categories","categories","Destaques por categoria",1,2,"{}"],["cta","cta","Chamada institucional",1,3,"{}"]].forEach((item) => block.run(...item));
+DEFAULT_HOME_BLOCKS.forEach((item) => block.run(item.id, item.type, item.title, item.enabled ? 1 : 0, item.position, item.config_json));
 console.log("Dados de demonstração criados. Admin: admin / GTChat@2026 | Redator: redatora / Redatora@2026");
