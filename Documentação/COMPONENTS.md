@@ -557,3 +557,23 @@ Exibe a navegação do painel e permite recolher a barra lateral. A preferência
 ### `AdminProfileMenu`
 
 Substitui o antigo bloco de usuário no rodapé da barra lateral. Recebe `user: SessionUser` e abre um menu no topo com identificação, gerenciamento de usuários, configurações e logout. Para redatores, apresenta apenas os atalhos compatíveis com sua permissão.
+
+## 19. `PageBuilderEditor`
+
+Editor em três painéis usado exclusivamente em `/admin/paginas/[id]/editor`. Recebe metadados da página, `BuilderDocument`, artigos, categorias e modelos reutilizáveis. Oferece layouts de uma a quatro colunas, 16 elementos, 10 modelos, undo/redo, autosave, upload, responsividade, SEO, publicação e versões.
+
+## 20. `PageRenderer`
+
+Renderiza o mesmo `BuilderDocument` na prévia e no site público, sem HTML arbitrário.
+
+```tsx
+<PageRenderer document={document} posts={posts} categories={categories} />
+```
+
+## 21. `AdminPagesManager`
+
+Lista, cria, duplica e exclui páginas. A página inicial é protegida contra exclusão.
+
+## 22. `GlobalAppearanceEditor`
+
+Edita somente marca, logo, favicon, cores e tipografia globais. A estrutura da home não é duplicada nessa tela: o atalho leva diretamente ao novo `PageBuilderEditor`.

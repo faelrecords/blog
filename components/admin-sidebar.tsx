@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { FileText, Home, LayoutTemplate, PanelLeftClose, PanelLeftOpen, PenLine, Settings, Users } from "lucide-react";
+import { FileText, Home, LayoutTemplate, PanelLeftClose, PanelLeftOpen, PanelsTopLeft, PenLine, Settings, Users } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const adminLinks = [
   { href: "/admin", label: "Visão geral", icon: LayoutTemplate, exact: true },
   { href: "/admin/artigos", label: "Artigos", icon: FileText },
+  { href: "/admin/paginas", label: "Páginas", icon: PanelsTopLeft },
   { href: "/admin/usuarios", label: "Usuários", icon: Users },
   { href: "/admin/aparencia", label: "Aparência", icon: PenLine },
   { href: "/admin/configuracoes", label: "Configurações", icon: Settings },

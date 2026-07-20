@@ -41,7 +41,7 @@ export function AdminMobileMenu({ admin }: { admin: boolean }) {
         <div className="drawer-head"><strong>GTChat</strong><button className="drawer-close" type="button" aria-label="Fechar navegação" onClick={close}><X/></button></div>
         <nav className="drawer-nav">
           <Link ref={firstLinkRef} href="/" onClick={close}>Ver blog</Link>
-          {admin && <><Link href="/admin" onClick={close}>Visão geral</Link><Link href="/admin/artigos" onClick={close}>Artigos</Link><Link href="/admin/usuarios" onClick={close}>Usuários</Link><Link href="/admin/aparencia" onClick={close}>Aparência</Link><Link href="/admin/configuracoes" onClick={close}>Configurações</Link></>}
+          {admin && <><Link href="/admin" onClick={close}>Visão geral</Link><Link href="/admin/artigos" onClick={close}>Artigos</Link><Link href="/admin/paginas" onClick={close}>Páginas</Link><Link href="/admin/usuarios" onClick={close}>Usuários</Link><Link href="/admin/aparencia" onClick={close}>Aparência</Link><Link href="/admin/configuracoes" onClick={close}>Configurações</Link></>}
           {!admin && <Link href="/publicar" onClick={close}>Meus artigos</Link>}
         </nav>
       </aside>

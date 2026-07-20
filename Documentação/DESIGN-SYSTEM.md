@@ -428,3 +428,9 @@ export function DiagnosticCard({ title, value }: { title: string; value: string 
   overflow-wrap: anywhere;
 }
 ```
+
+## Construtor visual
+
+No desktop, o editor usa biblioteca de `280px`, canvas flexível e inspetor de `310px`. Em telas menores, os painéis são empilhados e todas as ações permanecem acessíveis.
+
+Seleção de seção usa contorno azul; seleção de elemento usa verde. Novos elementos devem entrar no contrato `BuilderElementType`, receber defaults, campos de propriedades, renderização pública, responsividade, validação e testes. Todos devem reutilizar os tokens globais de cor, tipografia, raio e sombra.

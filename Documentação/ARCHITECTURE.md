@@ -435,6 +435,30 @@ Tipos atuais: `hero`, `latest`, `text` e `cta`. A antiga seção de categorias n
 
 `CategoryManager` chama endpoints administrativos. Ao excluir uma categoria, uma transação define `posts.category_id` como `NULL` antes de remover a categoria, preservando todos os artigos. O editor de artigos atualiza a listagem após cada mutação.
 
+## 18.3 Arquitetura do construtor de páginas
+
+O documento versionado segue `Página → Seções → Colunas → Elementos`.
+
+- `lib/page-builder.ts`: contratos, validação, biblioteca e modelos.
+- `components/page-builder-editor.tsx`: canvas, histórico, autosave e propriedades.
+- `components/page-renderer.tsx`: renderização comum à prévia e ao site público.
+- `/admin/paginas`: gerenciamento.
+- `/admin/paginas/[id]/editor`: construção visual.
+- `/[slug]`: publicação institucional.
+- `/`: usa a página marcada como inicial, com fallback legado.
+
+`draft_json` e `published_json` são separados. Autosave nunca altera o conteúdo público; somente publicar atualiza `published_json`.
+
+| Tabela | Responsabilidade |
+|---|---|
+| `pages` | Metadados, SEO, rascunho e publicação |
+| `page_sections` | Índice das seções por posição |
+| `page_versions` | Histórico restaurável |
+| `reusable_sections` | Modelos do administrador |
+| `page_templates` | Modelos persistidos/importados futuros |
+
+As migrations são executadas em ordem lexical. O construtor não aceita HTML, CSS ou JavaScript arbitrário; tipos, URLs, cores, profundidade e tamanho são validados.
+
 ## 19. Leitura complementar
 
 - [API.md](./API.md)

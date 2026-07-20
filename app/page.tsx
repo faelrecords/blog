@@ -5,10 +5,18 @@ import { SiteFooter } from "@/components/site-footer";
 import { PostCard } from "@/components/post-card";
 import { getHomeBlocks, getSettings, publicPosts, type PublicPost } from "@/lib/db";
 import { parseHomeBlockConfig } from "@/lib/theme";
+import { db } from "@/lib/db";
+import { parseBuilderDocument } from "@/lib/page-builder";
+import { PageRenderer } from "@/components/page-renderer";
 
 export default function HomePage() {
   const settings = getSettings();
   const posts = publicPosts(12);
+  const builderPage = db.prepare("SELECT published_json FROM pages WHERE is_home=1 AND status='publicado'").get() as { published_json: string | null } | undefined;
+  if (builderPage?.published_json) {
+    const categories = db.prepare("SELECT c.id,c.name,c.slug,c.color,COUNT(p.id) total FROM categories c LEFT JOIN posts p ON p.category_id=c.id GROUP BY c.id ORDER BY total DESC").all() as { id: number; name: string; slug: string; color: string; total: number }[];
+    return <><SiteHeader/><main><PageRenderer document={parseBuilderDocument(builderPage.published_json)} posts={posts} categories={categories}/></main><SiteFooter/></>;
+  }
   const featured = (posts.find((post) => post.featured) || posts[0]) as PublicPost | undefined;
   const blocks = getHomeBlocks().filter((block) => block.enabled);
 

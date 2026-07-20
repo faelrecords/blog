@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ChevronDown, FileText, LogOut, Settings, UserRound, Users } from "lucide-react";
+import { ChevronDown, FileText, LogOut, PanelsTopLeft, Settings, UserRound, Users } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { SessionUser } from "@/lib/db";
 
@@ -24,7 +24,7 @@ export function AdminProfileMenu({ user }: { user: SessionUser }) {
     </button>
     {open && <div className="profile-dropdown" role="menu">
       <div className="profile-dropdown-head"><strong>{user.name}</strong><small>@{user.username}</small></div>
-      <nav>{admin ? <><Link href="/admin/usuarios" role="menuitem" onClick={() => setOpen(false)}><Users size={17}/> Gerenciar usuários</Link><Link href="/admin/configuracoes" role="menuitem" onClick={() => setOpen(false)}><Settings size={17}/> Configurações</Link></> : <Link href="/publicar" role="menuitem" onClick={() => setOpen(false)}><FileText size={17}/> Meus artigos</Link>}</nav>
+      <nav>{admin ? <><Link href="/admin/paginas" role="menuitem" onClick={() => setOpen(false)}><PanelsTopLeft size={17}/> Gerenciar páginas</Link><Link href="/admin/usuarios" role="menuitem" onClick={() => setOpen(false)}><Users size={17}/> Gerenciar usuários</Link><Link href="/admin/configuracoes" role="menuitem" onClick={() => setOpen(false)}><Settings size={17}/> Configurações</Link></> : <Link href="/publicar" role="menuitem" onClick={() => setOpen(false)}><FileText size={17}/> Meus artigos</Link>}</nav>
       <form action="/api/auth/logout" method="post"><button type="submit" role="menuitem"><LogOut size={17}/> Sair</button></form>
     </div>}
   </div>;

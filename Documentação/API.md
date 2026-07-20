@@ -715,3 +715,45 @@ export async function POST(request: NextRequest) {
 8. Retornar erros em português com formato `{ "error": "..." }`.
 9. Usar `200` para leitura/atualização, `201` para criação nova quando possível, `204` apenas sem corpo.
 10. Documentar o endpoint neste arquivo e adicionar testes.
+
+## Editor de páginas
+
+Todas as rotas exigem administrador; mutações também exigem mesma origem.
+
+| Endpoint | Método | Finalidade |
+|---|---|---|
+| `/api/admin/pages` | `GET` | Listar páginas |
+| `/api/admin/pages` | `POST` | Criar página em branco ou a partir de modelo |
+| `/api/admin/pages/:id` | `GET` | Consultar página e rascunho |
+| `/api/admin/pages/:id` | `PUT` | Autosave, salvar, publicar ou arquivar |
+| `/api/admin/pages/:id` | `DELETE` | Excluir página que não seja a home |
+| `/api/admin/pages/:id/duplicate` | `POST` | Duplicar como rascunho |
+| `/api/admin/pages/:id/versions` | `GET` | Listar versões |
+| `/api/admin/pages/:id/versions/:versionId` | `POST` | Restaurar versão no rascunho |
+| `/api/admin/reusable-sections` | `GET/POST` | Listar ou criar modelos internos |
+| `/api/admin/reusable-sections/:id` | `DELETE` | Excluir modelo interno |
+
+### Criar página
+
+```json
+{"title":"Sobre a GTChat","template":"content-image"}
+```
+
+Resposta `201`: `{"id":2,"slug":"sobre-a-gtchat"}`.
+
+### Salvar ou publicar
+
+```json
+{
+  "title":"Sobre a GTChat",
+  "slug":"sobre",
+  "seo_title":"Sobre a GTChat",
+  "seo_description":"Conheça nossa plataforma.",
+  "document":{"version":1,"sections":[]},
+  "mode":"publish"
+}
+```
+
+`mode` aceita `autosave`, `save`, `publish` e `archive`. O documento aceita no máximo 50 seções, quatro colunas por seção, 30 elementos por coluna e 300 KB.
+
+Erros: `400` documento inválido, `401` sem sessão, `403` origem inválida, `404` recurso ausente e `409` slug duplicado ou home protegida.

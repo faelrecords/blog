@@ -1,6 +1,7 @@
 import { db } from "../lib/db";
 import { hashPassword } from "../lib/security";
 import { DEFAULT_HOME_BLOCKS, DEFAULT_THEME_SETTINGS } from "../lib/theme";
+import { defaultHomeDocument } from "../lib/page-builder";
 
 const now = new Date().toISOString();
 const insertUser = db.prepare("INSERT OR IGNORE INTO users (name,username,password_hash,role,active,created_at) VALUES (?,?,?,?,1,?)");
@@ -15,6 +16,14 @@ const insertCategory = db.prepare("INSERT OR IGNORE INTO categories (name,slug,c
 for (const item of categories) insertCategory.run(...item);
 
 const admin = db.prepare("SELECT id FROM users WHERE username='admin'").get() as { id: number };
+const hasBuilderPage = db.prepare("SELECT 1 FROM pages LIMIT 1").get();
+if (!hasBuilderPage) {
+  const homeDocument = defaultHomeDocument();
+  const document = JSON.stringify(homeDocument);
+  const page = db.prepare("INSERT INTO pages (title,slug,status,is_home,draft_json,published_json,author_id,published_at,created_at,updated_at) VALUES (?,?,?,?,?,?,?,?,?,?)").run("Página inicial", "inicio", "publicado", 1, document, document, admin.id, now, now, now);
+  const insertSection = db.prepare("INSERT INTO page_sections (id,page_id,position,section_json,updated_at) VALUES (?,?,?,?,?)");
+  homeDocument.sections.forEach((section, position) => insertSection.run(section.id, page.lastInsertRowid, position, JSON.stringify(section), now));
+}
 const rows = db.prepare("SELECT id,slug FROM categories").all() as { id: number; slug: string }[];
 const categoryId = Object.fromEntries(rows.map((row) => [row.slug, row.id]));
 const posts = [
