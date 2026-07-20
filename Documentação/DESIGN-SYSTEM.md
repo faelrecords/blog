@@ -436,3 +436,7 @@ No desktop, o editor usa biblioteca de `280px`, canvas flexível e inspetor de `
 Seleção de seção usa contorno azul; seleção de elemento usa verde. Novos elementos devem entrar no contrato `BuilderElementType`, receber defaults, campos de propriedades, renderização pública, responsividade, validação e testes. Todos devem reutilizar os tokens globais de cor, tipografia, raio e sombra.
 
 Durante o arraste, widgets usam cursor `grab`/`grabbing` e o destino recebe contorno tracejado na cor principal. O alvo deve permanecer visível em colunas vazias, com altura mínima de `64px`. Editores de itens compostos usam um cartão discreto por item, campos separados e ação de exclusão com rótulo acessível.
+
+Seções possuem uma barra contextual branca com ícones de edição, reordenação, duplicação e exclusão. Ela aparece no hover ou quando a seção está selecionada. O botão “Adicionar seção aqui” fica na divisão entre blocos para deixar clara a posição de inserção.
+
+As combinações rápidas de seção são: branco, neutro, verde suave, verde GTChat e azul noturno. Cada combinação define fundo e contraste do texto em uma única alteração. Cores personalizadas continuam disponíveis pelos seletores de fundo e texto.

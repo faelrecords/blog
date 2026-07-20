@@ -35,4 +35,17 @@ describe("construtor de páginas", () => {
       description: "Todos os canais em um só lugar",
     });
   });
+
+  it("valida propriedades avançadas de seção", () => {
+    const document = defaultHomeDocument();
+    document.sections[0].style = {
+      ...document.sections[0].style,
+      background: "#0b1c30",
+      color: "#ffffff",
+      gap: 32,
+      minHeight: 560,
+      verticalAlign: "center",
+    };
+    expect(builderDocumentSchema.safeParse(document).success).toBe(true);
+  });
 });

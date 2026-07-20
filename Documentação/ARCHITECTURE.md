@@ -451,6 +451,8 @@ O documento versionado segue `Página → Seções → Colunas → Elementos`.
 
 O arrastar e soltar trabalha sobre IDs de seção, coluna e elemento. A biblioteca cria um novo elemento no destino; elementos já existentes são removidos da origem e inseridos na posição indicada dentro da mesma atualização imutável do documento. Colunas vazias continuam sendo destinos válidos. O histórico recebe a operação completa, permitindo desfazer e refazer sem estados intermediários.
 
+O canvas fornece ações contextuais por seção. Todas chamam as mesmas operações imutáveis usadas pelo painel de camadas, portanto inserção intermediária, duplicação, exclusão e reordenação permanecem compatíveis com histórico e autosave. Propriedades de seção como `background`, `color`, `gap`, `minHeight` e `verticalAlign` pertencem ao documento e passam pela validação do schema antes de serem persistidas.
+
 Listas com dois campos, como benefícios e perguntas frequentes, continuam compactas no JSON (`título|descrição`). A função `parsePairedItem` centraliza a leitura e mantém compatibilidade com itens antigos que tinham apenas título.
 
 | Tabela | Responsabilidade |

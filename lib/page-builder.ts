@@ -23,8 +23,11 @@ export type BuilderStyle = {
   color?: string;
   padding?: number;
   margin?: number;
+  gap?: number;
+  minHeight?: number;
   radius?: number;
   align?: "left" | "center" | "right";
+  verticalAlign?: "start" | "center" | "end";
   fontSize?: number;
   shadow?: boolean;
 };
@@ -62,8 +65,11 @@ const styleSchema = z
     color: z.string().max(100).optional(),
     padding: z.number().min(0).max(160).optional(),
     margin: z.number().min(0).max(160).optional(),
+    gap: z.number().min(0).max(120).optional(),
+    minHeight: z.number().min(0).max(1200).optional(),
     radius: z.number().min(0).max(80).optional(),
     align: z.enum(["left", "center", "right"]).optional(),
+    verticalAlign: z.enum(["start", "center", "end"]).optional(),
     fontSize: z.number().min(10).max(100).optional(),
     shadow: z.boolean().optional(),
   })

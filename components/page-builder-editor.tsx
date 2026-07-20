@@ -161,6 +161,14 @@ const fields: Partial<Record<BuilderElementType, Field[]>> = {
   ],
 };
 
+const SECTION_COLOR_PRESETS = [
+  { name: "Branco", background: "#ffffff", color: "#0b1c30" },
+  { name: "Neutro", background: "#f4f7fb", color: "#0b1c30" },
+  { name: "Verde suave", background: "#eaf6e8", color: "#0b1c30" },
+  { name: "Verde GTChat", background: "#106e00", color: "#ffffff" },
+  { name: "Azul noturno", background: "#0b1c30", color: "#ffffff" },
+] as const;
+
 export function PageBuilderEditor({
   page: initialPage,
   initialDocument,
@@ -425,6 +433,15 @@ export function PageBuilderEditor({
       else (section.style as Record<string, unknown>)[key] = value;
     });
   }
+  function updateSectionStyles(values: Partial<BuilderElement["style"]>) {
+    if (!selectedSection) return;
+    mutate((draft) => {
+      const section = draft.sections.find(
+        (item) => item.id === selectedSection.id,
+      )!;
+      section.style = { ...section.style, ...values };
+    });
+  }
   function moveSection(index: number, delta: number) {
     const target = index + delta;
     if (target < 0 || target >= document.sections.length) return;
@@ -460,14 +477,80 @@ export function PageBuilderEditor({
         element.id = uid(element.type);
       });
     });
+    const sectionIndex = document.sections.findIndex(
+      (item) => item.id === section.id,
+    );
+    const sections = [...document.sections];
+    sections.splice(sectionIndex + 1, 0, copy);
     apply(
-      { ...document, sections: [...document.sections, copy] },
+      { ...document, sections },
       {
         sectionId: copy.id,
         columnId: copy.columns[0].id,
         elementId: copy.columns[0].elements[0]?.id,
       },
     );
+  }
+  function addSectionAfter(sectionId: string) {
+    const section = createSection(createElement("heading"));
+    section.columns[0].elements = [];
+    const sectionIndex = document.sections.findIndex(
+      (item) => item.id === sectionId,
+    );
+    const sections = [...document.sections];
+    sections.splice(sectionIndex + 1, 0, section);
+    apply(
+      { ...document, sections },
+      { sectionId: section.id, columnId: section.columns[0].id },
+    );
+    setLeftTab("elements");
+  }
+  function moveSectionById(sectionId: string, delta: number) {
+    const sectionIndex = document.sections.findIndex(
+      (item) => item.id === sectionId,
+    );
+    moveSection(sectionIndex, delta);
+  }
+  function removeSectionById(sectionId: string) {
+    if (!confirm("Excluir esta seção?")) return;
+    mutate((draft) => {
+      draft.sections = draft.sections.filter((item) => item.id !== sectionId);
+    }, null);
+  }
+  function duplicateSelectedElement() {
+    if (!selectedSection || !selectedColumn || !selectedElement) return;
+    const copy = structuredClone(selectedElement);
+    copy.id = uid(copy.type);
+    mutate(
+      (draft) => {
+        const column = draft.sections
+          .find((item) => item.id === selectedSection.id)!
+          .columns.find((item) => item.id === selectedColumn.id)!;
+        const index = column.elements.findIndex(
+          (item) => item.id === selectedElement.id,
+        );
+        column.elements.splice(index + 1, 0, copy);
+      },
+      {
+        sectionId: selectedSection.id,
+        columnId: selectedColumn.id,
+        elementId: copy.id,
+      },
+    );
+  }
+  function moveSelectedElement(delta: number) {
+    if (!selectedSection || !selectedColumn || !selectedElement) return;
+    const index = selectedColumn.elements.findIndex(
+      (item) => item.id === selectedElement.id,
+    );
+    const target = index + delta;
+    if (target < 0 || target >= selectedColumn.elements.length) return;
+    mutate((draft) => {
+      const elements = draft.sections
+        .find((item) => item.id === selectedSection.id)!
+        .columns.find((item) => item.id === selectedColumn.id)!.elements;
+      [elements[index], elements[target]] = [elements[target], elements[index]];
+    });
   }
 
   async function save(mode: "autosave" | "save" | "publish" | "archive") {
@@ -650,6 +733,10 @@ export function PageBuilderEditor({
                   onChange={(event) => setQuery(event.target.value)}
                 />
               </div>
+              <p className="builder-tip">
+                Arraste um elemento para a posição desejada ou clique para
+                inserir na coluna selecionada.
+              </p>
               <div className="layout-picker">
                 <strong>Estrutura</strong>
                 <div>
@@ -887,6 +974,19 @@ export function PageBuilderEditor({
               selectedElementId={selection?.elementId}
               editable
               dropTargetId={dropTargetId}
+              onAddSectionAfter={addSectionAfter}
+              onMoveSection={moveSectionById}
+              onDuplicateSection={(sectionId) => {
+                const section = document.sections.find(
+                  (item) => item.id === sectionId,
+                );
+                if (section) duplicateSection(section);
+              }}
+              onRemoveSection={removeSectionById}
+              onSelectSection={(sectionId) => {
+                setSelection({ sectionId });
+                setRightTab("style");
+              }}
             />
             {!document.sections.length && (
               <div className="builder-empty-canvas">
@@ -948,6 +1048,7 @@ export function PageBuilderEditor({
               <SectionInspector
                 section={selectedSection}
                 update={updateSection}
+                updateMany={updateSectionStyles}
               />
             ) : (
               <div className="builder-no-selection">
@@ -956,12 +1057,45 @@ export function PageBuilderEditor({
               </div>
             )}
             {selection && rightTab !== "page" && rightTab !== "history" && (
-              <button
-                className="btn btn-danger builder-delete"
-                onClick={removeSelection}
-              >
-                <Trash2 size={16} /> Excluir selecionado
-              </button>
+              <div className="selection-actions">
+                {selectedElement && (
+                  <>
+                    <button
+                      type="button"
+                      title="Mover para cima"
+                      aria-label="Mover elemento para cima"
+                      onClick={() => moveSelectedElement(-1)}
+                    >
+                      <ArrowUp />
+                    </button>
+                    <button
+                      type="button"
+                      title="Mover para baixo"
+                      aria-label="Mover elemento para baixo"
+                      onClick={() => moveSelectedElement(1)}
+                    >
+                      <ArrowDown />
+                    </button>
+                    <button
+                      type="button"
+                      title="Duplicar elemento"
+                      aria-label="Duplicar elemento"
+                      onClick={duplicateSelectedElement}
+                    >
+                      <Copy />
+                    </button>
+                  </>
+                )}
+                <button
+                  type="button"
+                  className="danger"
+                  title="Excluir selecionado"
+                  aria-label="Excluir selecionado"
+                  onClick={removeSelection}
+                >
+                  <Trash2 />
+                </button>
+              </div>
             )}
           </div>
         </aside>
@@ -1063,9 +1197,11 @@ function VersionList({
 function SectionInspector({
   section,
   update,
+  updateMany,
 }: {
   section: BuilderSection;
   update: (key: string, value: unknown) => void;
+  updateMany: (values: Partial<BuilderElement["style"]>) => void;
 }) {
   return (
     <div className="inspector-fields">
@@ -1080,6 +1216,79 @@ function SectionInspector({
           <option value="boxed">Centralizada</option>
           <option value="full">Largura total</option>
         </select>
+      </div>
+      <div className="field">
+        <label>Cores prontas</label>
+        <div className="section-color-presets">
+          {SECTION_COLOR_PRESETS.map((preset) => (
+            <button
+              type="button"
+              key={preset.name}
+              className={
+                section.style.background === preset.background &&
+                section.style.color === preset.color
+                  ? "active"
+                  : ""
+              }
+              title={preset.name}
+              aria-label={`Aplicar cores ${preset.name}`}
+              onClick={() =>
+                updateMany({
+                  background: preset.background,
+                  color: preset.color,
+                })
+              }
+            >
+              <span
+                style={{
+                  background: preset.background,
+                  color: preset.color,
+                }}
+              >
+                Aa
+              </span>
+              <small>{preset.name}</small>
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className="field">
+        <label>Alinhamento vertical</label>
+        <select
+          className="select"
+          value={section.style.verticalAlign || "start"}
+          onChange={(event) => update("verticalAlign", event.target.value)}
+        >
+          <option value="start">No topo</option>
+          <option value="center">Centralizado</option>
+          <option value="end">Na base</option>
+        </select>
+      </div>
+      <div className="section-size-fields">
+        <div className="field">
+          <label>Espaço entre colunas</label>
+          <input
+            className="input"
+            type="number"
+            min="0"
+            max="120"
+            value={section.style.gap ?? 24}
+            onChange={(event) => update("gap", Number(event.target.value))}
+          />
+        </div>
+        <div className="field">
+          <label>Altura mínima</label>
+          <input
+            className="input"
+            type="number"
+            min="0"
+            max="1200"
+            value={section.style.minHeight ?? 0}
+            onChange={(event) =>
+              update("minHeight", Number(event.target.value))
+            }
+          />
+        </div>
       </div>
       <StyleFields style={section.style} update={update} />
     </div>

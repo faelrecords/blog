@@ -564,6 +564,10 @@ Editor em três painéis usado exclusivamente em `/admin/paginas/[id]/editor`. R
 
 Os elementos da biblioteca podem ser clicados ou arrastados. Ao arrastar, podem ser inseridos antes ou depois de outro elemento e também movidos entre colunas. O clique continua disponível como alternativa acessível e adiciona o elemento à coluna selecionada.
 
+Cada seção exibe uma barra contextual no canvas para editar, mover, duplicar e excluir, além de um botão para inserir uma nova seção exatamente abaixo. A barra de ações do inspetor permite mover, duplicar ou excluir o elemento selecionado sem abrir o painel de camadas.
+
+O inspetor de seção oferece combinações de cores prontas, cores personalizadas, largura, altura mínima, distância entre colunas, alinhamento vertical, espaçamento, raio e sombra. O alinhamento horizontal de elementos compostos deve posicionar em conjunto título, descrição e botão.
+
 Elementos com listas compostas usam o formato persistido `título|descrição`, mas o inspetor apresenta campos separados. Em `Benefícios`, cada item possui título e descrição editáveis; em `FAQ`, cada item possui pergunta e resposta.
 
 ## 20. `PageRenderer`
