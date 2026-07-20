@@ -448,3 +448,12 @@
 }
 
 @media(prefers-reduced-motion:reduce){.drawer-panel,.drawer-panel-left{animation:none}}
+
+@media(min-width:981px){
+ .article-sidebar{position:relative;top:auto;display:block;align-self:stretch;min-height:100%;max-height:none;overflow:visible;scrollbar-width:auto}
+ .article-sidebar-track{position:sticky;top:96px;display:grid;gap:16px;transform:translateY(var(--article-sidebar-shift,0px));will-change:transform}
+}
+
+@media(max-width:980px){
+ .article-sidebar-track{position:static;display:grid;gap:16px;transform:none!important}
+}

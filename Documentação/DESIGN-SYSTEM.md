@@ -287,7 +287,7 @@ Regras:
 - bloco lateral com largura máxima de `320px` e posição fixa abaixo do cabeçalho;
 - pesquisa em campo compacto com ícone, label acessível e botão de envio visível;
 - categorias em painel separado abaixo dos relacionados, com indicador de cor, contador e destaque da categoria atual;
-- a coluna recebe rolagem interna quando sua altura ultrapassa a janela, evitando conteúdo inacessível;
+- a coluna nunca cria uma barra de rolagem própria: durante a leitura, o conteúdo lateral desliza do topo até as categorias conforme o progresso da página;
 - abaixo de `980px`, o bloco passa para baixo do artigo e ocupa a largura disponível.
 
 ### Newsletter

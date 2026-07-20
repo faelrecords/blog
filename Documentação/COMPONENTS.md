@@ -178,7 +178,7 @@ Cards de entidade usam `<Entidade>Card`.
 
 ### `RelatedPostsSidebar`
 
-Exibe, à direita do artigo, a pesquisa pública, até três publicações recentes e as categorias disponíveis com suas quantidades de posts públicos. Publicações da mesma categoria aparecem primeiro; se não forem suficientes, a lista é completada com as mais recentes do blog. As categorias são consultadas no SQLite a cada renderização e refletem automaticamente criações, exclusões e novos posts. Em telas menores, os blocos deixam de ser fixos e aparecem abaixo do conteúdo principal.
+Exibe, à direita do artigo, a pesquisa pública, até três publicações recentes e as categorias disponíveis com suas quantidades de posts públicos. Publicações da mesma categoria aparecem primeiro; se não forem suficientes, a lista é completada com as mais recentes do blog. As categorias são consultadas no SQLite a cada renderização e refletem automaticamente criações, exclusões e novos posts. No desktop, a lateral acompanha a rolagem sem criar uma segunda barra: preserva o topo durante a primeira parte da leitura e revela progressivamente as categorias na parte final. Em telas menores, os blocos aparecem abaixo do conteúdo principal.
 
 | Prop | Tipo | Obrigatória | Descrição |
 |---|---|---:|---|
