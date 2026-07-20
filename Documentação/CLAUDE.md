@@ -12,6 +12,7 @@ O **GTChat Blog** é uma plataforma editorial em português do Brasil formada po
 - editor visual de artigos com Tiptap;
 - painel administrativo para usuários, configurações e aparência;
 - persistência local em SQLite 3;
+- lista de e-mails em um segundo SQLite independente;
 - uploads persistidos no sistema de arquivos;
 - execução local no Windows e implantação em um servidor Linux.
 
@@ -22,7 +23,7 @@ Rotas principais:
 | Blog público | `/`, `/artigos`, `/artigos/[slug]` |
 | Autenticação | `/entrar` |
 | Redação | `/publicar`, `/publicar/novo`, `/publicar/[id]` |
-| Administração | `/admin`, `/admin/artigos`, `/admin/usuarios`, `/admin/aparencia`, `/admin/configuracoes` |
+| Administração | `/admin`, `/admin/artigos`, `/admin/usuarios`, `/admin/inscritos`, `/admin/aparencia`, `/admin/configuracoes` |
 
 ## 2. Stack utilizada
 
@@ -53,6 +54,7 @@ GTblog/
 ├── components/              # Componentes React compartilhados
 ├── db/schema.ts             # Schema declarativo do Drizzle
 ├── drizzle/                 # Migrations SQL versionadas
+├── newsletter-drizzle/      # Migrations do banco da lista de e-mails
 ├── lib/                     # Banco, autenticação, segurança e regras comuns
 ├── scripts/                 # Migração, seed e administração local
 ├── public/                  # Arquivos públicos versionados
@@ -100,7 +102,8 @@ type ArticleSummary = {
 - Usar consultas parametrizadas do `better-sqlite3`.
 - Nunca interpolar entrada do usuário diretamente em SQL.
 - Agrupar múltiplas gravações relacionadas em `db.transaction`.
-- Atualizar `db/schema.ts` e criar migration em `drizzle/` quando o banco mudar.
+- Alterações editoriais usam migrations em `drizzle/`; alterações da lista de e-mails usam `newsletter-drizzle/`.
+- Nunca misturar tabelas da newsletter em `blog.sqlite` nem conteúdo editorial em `newsletter.sqlite`.
 
 ## 5. Como criar novas funcionalidades
 

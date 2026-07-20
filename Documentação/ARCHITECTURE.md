@@ -394,6 +394,7 @@ Variáveis relevantes:
 |---|---|
 | `APP_URL` | URL pública canônica |
 | `DATABASE_PATH` | caminho do SQLite |
+| `NEWSLETTER_DATABASE_PATH` | caminho do SQLite separado da lista de e-mails |
 | `UPLOADS_DIR` | pasta de uploads |
 | `MAX_UPLOAD_MB` | limite de upload |
 | `BOOTSTRAP_ADMIN_*` | criação inicial temporária |
@@ -466,6 +467,20 @@ Listas com dois campos, como benefícios e perguntas frequentes, continuam compa
 | `page_templates` | Modelos persistidos/importados futuros |
 
 As migrations são executadas em ordem lexical. O construtor não aceita HTML, CSS ou JavaScript arbitrário; tipos, URLs, cores, profundidade e tamanho são validados.
+
+## 18.4 Lista de e-mails
+
+A newsletter usa `NEWSLETTER_DATABASE_PATH` e o arquivo padrão `data/newsletter.sqlite`. `lib/newsletter-db.ts` abre esse banco em WAL e executa, em ordem lexical, as migrations de `newsletter-drizzle/`. O volume `/app/data` preserva os dois bancos no Linux.
+
+Fluxo público:
+
+1. `NewsletterSignup` coleta nome opcional, e-mail e consentimento explícito.
+2. `POST /api/newsletter/subscribe` valida origem, limite, honeypot e payload.
+3. O e-mail é normalizado e gravado sem duplicidade.
+4. Um cadastro inativo é reativado e recebe nova data e versão de consentimento.
+5. O endpoint sempre usa uma mensagem de sucesso genérica para não enumerar contatos.
+
+O painel `/admin/inscritos` e seus endpoints exigem administrador. A exportação lê somente registros `active` e gera CSV UTF-8 protegido contra fórmulas. Não há envio de e-mail nem CRM nesta versão; uma integração futura deverá consumir o banco separado e respeitar os registros inativos.
 
 ## 19. Leitura complementar
 

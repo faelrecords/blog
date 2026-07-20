@@ -153,6 +153,12 @@ const fields: Partial<Record<BuilderElementType, Field[]>> = {
       pairLabels: ["Pergunta", "Resposta"],
     },
   ],
+  newsletter: [
+    { key: "title", label: "Título", kind: "textarea" },
+    { key: "description", label: "Descrição", kind: "textarea" },
+    { key: "buttonLabel", label: "Texto do botão" },
+    { key: "consentText", label: "Texto do consentimento", kind: "textarea" },
+  ],
   cta: [
     { key: "title", label: "Título" },
     { key: "text", label: "Texto", kind: "textarea" },

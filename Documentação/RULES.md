@@ -112,6 +112,8 @@ Não criar uma segunda camada de arquitetura (`src/`, `services/`, `utils/`) sem
 - Não carregar bibliotecas pesadas no blog público sem justificativa.
 - Evitar efeitos que causem requisições duplicadas.
 - Preservar o modo WAL do SQLite para a instância única.
+- Manter conteúdo e autenticação em `blog.sqlite` e inscritos em `newsletter.sqlite`.
+- Incluir os dois bancos e uploads no procedimento de backup.
 
 ## 8. Regras de acessibilidade
 
@@ -194,6 +196,7 @@ Não criar uma segunda camada de arquitetura (`src/`, `services/`, `utils/`) sem
 - [ ] Autorização e propriedade do recurso foram verificadas.
 - [ ] Queries são parametrizadas.
 - [ ] Mudança de schema possui migration.
+- [ ] A migration foi criada no diretório do banco correto: `drizzle/` ou `newsletter-drizzle/`.
 - [ ] HTML e uploads seguem as regras de segurança.
 
 ### Interface

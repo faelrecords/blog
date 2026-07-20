@@ -287,6 +287,15 @@ Regras:
 - bloco lateral com largura máxima de `320px` e posição fixa abaixo do cabeçalho;
 - abaixo de `980px`, o bloco passa para baixo do artigo e ocupa a largura disponível.
 
+### Newsletter
+
+- bloco em gradiente baseado em `--primary` e `--accent`;
+- duas colunas no desktop e uma abaixo de `980px`;
+- campos brancos com labels visíveis e checkbox de consentimento separado;
+- mensagem de sucesso ou erro com `aria-live`;
+- botão ocupa toda a largura no celular;
+- o elemento do construtor reutiliza exatamente o formulário público, sem simulação visual divergente.
+
 ### Painel administrativo
 
 ```html

@@ -42,7 +42,7 @@ if not exist "node_modules\" (
 set "PRIMEIRA_EXECUCAO=0"
 if not exist "data\blog.sqlite" set "PRIMEIRA_EXECUCAO=1"
 
-echo Preparando o banco de dados...
+echo Preparando os bancos de dados do blog e da lista de e-mails...
 call npm run db:migrate
 if errorlevel 1 goto :erro
 

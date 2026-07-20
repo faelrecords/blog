@@ -757,3 +757,79 @@ Resposta `201`: `{"id":2,"slug":"sobre-a-gtchat"}`.
 `mode` aceita `autosave`, `save`, `publish` e `archive`. O documento aceita no máximo 50 seções, quatro colunas por seção, 30 elementos por coluna e 300 KB.
 
 Erros: `400` documento inválido, `401` sem sessão, `403` origem inválida, `404` recurso ausente e `409` slug duplicado ou home protegida.
+
+## 11. Lista de e-mails
+
+### `POST /api/newsletter/subscribe`
+
+Cadastro público. Exige `Content-Type: application/json` e mesma origem; não exige sessão.
+
+```json
+{
+  "name": "Rafael",
+  "email": "rafael@example.com",
+  "consent": true,
+  "source": "/artigos/exemplo",
+  "website": ""
+}
+```
+
+Sucesso `200`:
+
+```json
+{"ok":true,"message":"Cadastro realizado. Obrigado por acompanhar os conteúdos da GTChat!"}
+```
+
+O retorno é igual para contato novo, repetido ou reativado. Erros: `400` payload inválido, `403` origem inválida e `429` excesso de tentativas.
+
+### `GET /api/admin/subscribers`
+
+Exige sessão de administrador. Query params: `query`, `status=all|active|inactive`, `period=all|7|30|90` e `page`.
+
+```json
+{
+  "items": [{"id":1,"name":"Rafael","email":"rafael@example.com","status":"active"}],
+  "total": 1,
+  "page": 1,
+  "pages": 1,
+  "pageSize": 20,
+  "stats": {"active":1,"inactive":0,"recent":1}
+}
+```
+
+### `PATCH /api/admin/subscribers/:id`
+
+Exige administrador, JSON e mesma origem. Aceita pelo menos um dos campos:
+
+```json
+{"name":"Rafael Silva","email":"rafael@example.com","status":"inactive"}
+```
+
+Sucesso `200`: `{"ok":true}`. Erros: `400` dados inválidos, `401` sem permissão, `403` origem inválida, `404` ausente e `409` e-mail duplicado.
+
+### `DELETE /api/admin/subscribers/:id`
+
+Exclusão definitiva do inscrito e de seu histórico. Exige administrador e mesma origem. Retorna `{"ok":true}` ou `404`.
+
+### `GET /api/admin/subscribers/export`
+
+Exige administrador. Retorna CSV com BOM UTF-8 e `Content-Disposition: attachment`. Somente inscritos ativos são incluídos; células iniciadas por `=`, `+`, `-` ou `@` são neutralizadas.
+
+### `GET /api/admin/newsletter-settings`
+
+Retorna título, descrição, botão, consentimento e versão atuais. Exige administrador.
+
+### `PUT /api/admin/newsletter-settings`
+
+Exige administrador, JSON e mesma origem.
+
+```json
+{
+  "title": "Conteúdos exclusivos",
+  "description": "Receba novidades da GTChat.",
+  "button_label": "Quero receber",
+  "consent_text": "Aceito receber comunicações por e-mail."
+}
+```
+
+Ao salvar, o servidor gera uma nova versão de consentimento. Sucesso `200`: `{"ok":true,"settings":{...}}`.

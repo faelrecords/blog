@@ -2,6 +2,8 @@
 
 Blog e plataforma editorial da GTChat, com Next.js, SQLite 3, autenticação própria, fluxo de revisão e editor visual do tema.
 
+O projeto usa dois bancos independentes: `blog.sqlite` para conteúdo e usuários e `newsletter.sqlite` para a lista de e-mails.
+
 ## Rodar no Windows
 
 1. Instale as dependências: `npm install`
@@ -23,15 +25,16 @@ Com a aplicação rodando, use `npx wrangler tunnel quick-start http://localhost
 
 ## Produção Linux
 
-Copie `.env.example` para `.env`, defina `APP_URL=https://blog.vibecodex.pro` e execute `docker compose up -d --build`. O volume `blog_data` mantém banco e imagens entre atualizações. Coloque Nginx ou Caddy com HTTPS na frente da porta 3000.
+Copie `.env.example` para `.env`, defina `APP_URL=https://blog.vibecodex.pro` e execute `docker compose up -d --build`. O volume `blog_data` mantém os dois bancos e as imagens entre atualizações. Coloque Nginx ou Caddy com HTTPS na frente da porta 3000.
 
 No primeiro início, preencha temporariamente `BOOTSTRAP_ADMIN_NAME`, `BOOTSTRAP_ADMIN_USERNAME` e `BOOTSTRAP_ADMIN_PASSWORD` no `.env`. Depois de confirmar o acesso, remova esses valores. Em uma instalação direta pelo código-fonte, `npm run admin:create` também cria um administrador de forma interativa. Não use as credenciais de demonstração em produção.
 
 ## Dados e backup
 
 - Banco: `data/blog.sqlite`
+- Lista de e-mails: `data/newsletter.sqlite`
 - Imagens: `data/uploads/`
-- Backup seguro: pare brevemente a aplicação ou use o comando `.backup` do SQLite, e copie também a pasta de uploads.
+- Backup seguro: pare brevemente a aplicação ou use o comando `.backup` do SQLite para os dois bancos, e copie também a pasta de uploads.
 - Nunca envie `data/` ou arquivos `.env` ao GitHub.
 
 ## Verificações

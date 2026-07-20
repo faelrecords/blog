@@ -18,6 +18,7 @@ COPY --from=builder --chown=nextjs /app/public ./public
 COPY --from=builder --chown=nextjs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs /app/drizzle ./drizzle
+COPY --from=builder --chown=nextjs /app/newsletter-drizzle ./newsletter-drizzle
 USER nextjs
 EXPOSE 3000
 VOLUME ["/app/data"]

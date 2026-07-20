@@ -11,6 +11,7 @@ import {
   Trash2,
 } from "lucide-react";
 import { PostCard } from "@/components/post-card";
+import { NewsletterSignup } from "@/components/newsletter-signup";
 import type { PublicPost } from "@/lib/db";
 import {
   parsePairedItem,
@@ -489,6 +490,19 @@ function ElementRenderer({
             </details>
           );
         })}
+      </div>
+    );
+  if (element.type === "newsletter")
+    return (
+      <div className="built-newsletter" style={style}>
+        <NewsletterSignup
+          content={{
+            title: text(content.title),
+            description: text(content.description),
+            buttonLabel: text(content.buttonLabel),
+            consentText: text(content.consentText),
+          }}
+        />
       </div>
     );
   if (element.type === "cta")

@@ -3,7 +3,9 @@ import { notFound } from "next/navigation";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { RelatedPostsSidebar } from "@/components/related-posts-sidebar";
+import { NewsletterSignup } from "@/components/newsletter-signup";
 import { db, relatedPublicPosts, type PublicPost } from "@/lib/db";
+import { getNewsletterSettings } from "@/lib/newsletter-db";
 
 function findPost(slug: string) {
   return db
@@ -39,6 +41,7 @@ export default async function ArticlePage({
   const post = findPost(slug);
   if (!post) notFound();
   const relatedPosts = relatedPublicPosts(post.id, post.category_slug, 3);
+  const newsletter = getNewsletterSettings();
   const date = new Date(
     post.published_at || post.scheduled_at || Date.now(),
   ).toLocaleDateString("pt-BR", {
@@ -92,6 +95,14 @@ export default async function ArticlePage({
                 </span>
               ))}
           </div>
+          <NewsletterSignup
+            content={{
+              title: newsletter.title,
+              description: newsletter.description,
+              buttonLabel: newsletter.button_label,
+              consentText: newsletter.consent_text,
+            }}
+          />
         </article>
         <RelatedPostsSidebar
           posts={relatedPosts}

@@ -17,6 +17,7 @@ export type BuilderElementType =
   | "stats"
   | "testimonials"
   | "faq"
+  | "newsletter"
   | "cta";
 export type BuilderStyle = {
   background?: string;
@@ -103,6 +104,7 @@ const elementSchema = z
       "stats",
       "testimonials",
       "faq",
+      "newsletter",
       "cta",
     ]),
     content: z.record(z.string(), z.unknown()),
@@ -294,6 +296,20 @@ export const ELEMENT_LIBRARY: {
         "Como funciona?|Centralize canais e automatize atendimentos.",
         "É fácil começar?|Sim, a implantação é acompanhada.",
       ],
+    },
+  },
+  {
+    type: "newsletter",
+    label: "Lista de e-mails",
+    category: "Conversão",
+    description: "Formulário de inscrição",
+    defaults: {
+      title: "Conteúdos exclusivos no seu e-mail",
+      description:
+        "Receba novidades, estratégias e materiais da GTChat para transformar cada conversa.",
+      buttonLabel: "Quero receber",
+      consentText:
+        "Aceito receber conteúdos e comunicações da GTChat por e-mail.",
     },
   },
   {

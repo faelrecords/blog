@@ -17,6 +17,8 @@
 | `MobileMenu` | `mobile-menu.tsx` | Client | Drawer móvel do blog |
 | `PostCard` | `post-card.tsx` | Server | Card de artigo público |
 | `RelatedPostsSidebar` | `related-posts-sidebar.tsx` | Server | Menu lateral com artigos relacionados |
+| `NewsletterSignup` | `newsletter-signup.tsx` | Client | Cadastro público na lista de e-mails |
+| `SubscriberManager` | `subscriber-manager.tsx` | Client | Gestão e exportação de inscritos |
 | `AdminShell` | `admin-shell.tsx` | Server | Estrutura das áreas autenticadas |
 | `AdminMobileMenu` | `admin-mobile-menu.tsx` | Client | Drawer móvel administrativo |
 | `PostEditor` | `editor.tsx` | Client | Criação e edição de artigos |
@@ -604,3 +606,17 @@ Lista, cria, duplica e exclui páginas. A página inicial é protegida contra ex
 ## 22. `GlobalAppearanceEditor`
 
 Edita somente marca, logo, favicon, cores e tipografia globais. A estrutura da home não é duplicada nessa tela: o atalho leva diretamente ao novo `PageBuilderEditor`.
+
+## 23. `NewsletterSignup`
+
+Formulário público reutilizado no final dos artigos e pelo elemento `newsletter` do construtor. Recebe `content` com título, descrição, texto do botão e consentimento, além de `compact` opcional. O componente envia nome opcional, e-mail, consentimento, origem e honeypot para `/api/newsletter/subscribe`.
+
+```tsx
+<NewsletterSignup content={{ title: "Conteúdos exclusivos" }} />
+```
+
+Não acessar o SQLite no cliente nem informar se o e-mail já existia.
+
+## 24. `SubscriberManager`
+
+Interface exclusiva de `/admin/inscritos`. Recebe listagem, indicadores e configurações iniciais; pesquisa, pagina, edita, ativa, desativa, exclui e direciona a exportação CSV. Toda mutação continua validada nos endpoints administrativos.
