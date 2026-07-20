@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
-export function AdminMobileMenu({ admin, name, username }: { admin: boolean; name: string; username: string }) {
+export function AdminMobileMenu({ admin }: { admin: boolean }) {
   const [open, setOpen] = useState(false);
   const triggerRef = useRef<HTMLButtonElement>(null);
   const firstLinkRef = useRef<HTMLAnchorElement>(null);
@@ -44,7 +44,6 @@ export function AdminMobileMenu({ admin, name, username }: { admin: boolean; nam
           {admin && <><Link href="/admin" onClick={close}>Visão geral</Link><Link href="/admin/artigos" onClick={close}>Artigos</Link><Link href="/admin/usuarios" onClick={close}>Usuários</Link><Link href="/admin/aparencia" onClick={close}>Aparência</Link><Link href="/admin/configuracoes" onClick={close}>Configurações</Link></>}
           {!admin && <Link href="/publicar" onClick={close}>Meus artigos</Link>}
         </nav>
-        <div className="admin-drawer-user"><strong>{name}</strong><small>@{username}</small><form action="/api/auth/logout" method="post"><button className="btn btn-outline" type="submit">Sair</button></form></div>
       </aside>
     </div>}
   </>;

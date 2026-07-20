@@ -547,3 +547,13 @@ Gerenciadores completos de entidades usam o sufixo `Manager`.
 Esses componentes são internos de `ThemeEditor` e não devem ser importados por outras páginas.
 
 O `ThemeEditor` usa uma área de trabalho em três colunas no desktop: biblioteca e estrutura à esquerda, página ao centro e configurações à direita. Em telas menores, as três áreas são empilhadas sem remover nenhuma função.
+
+## 18. Navegação administrativa
+
+### `AdminSidebar`
+
+Exibe a navegação do painel e permite recolher a barra lateral. A preferência é mantida no navegador. Recebe `admin: boolean` para apresentar somente as rotas permitidas à função atual.
+
+### `AdminProfileMenu`
+
+Substitui o antigo bloco de usuário no rodapé da barra lateral. Recebe `user: SessionUser` e abre um menu no topo com identificação, gerenciamento de usuários, configurações e logout. Para redatores, apresenta apenas os atalhos compatíveis com sua permissão.
