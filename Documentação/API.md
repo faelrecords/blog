@@ -40,6 +40,58 @@ Cookie: gtchat_session=<token>
 
 Mutações autenticadas devem ser de mesma origem. O navegador define o boundary de `multipart/form-data`; não o escreva manualmente.
 
+## Categorias administrativas
+
+### `GET /api/admin/categories`
+
+- **Descrição:** lista categorias e a quantidade de artigos vinculados.
+- **Autenticação:** administrador.
+- **Headers:** cookie de sessão.
+- **Body:** não possui.
+- **Sucesso `200`:**
+
+```json
+{"categories":[{"id":1,"name":"Produto","slug":"produto","color":"#106e00","count":4}]}
+```
+
+- **Erros:** `401` quando a sessão não pertence a um administrador.
+
+### `POST /api/admin/categories`
+
+- **Descrição:** cria uma categoria. O slug é gerado no servidor e recebe sufixo quando necessário.
+- **Autenticação:** administrador.
+- **Headers:** `Content-Type: application/json`, cookie e `Origin` de mesma origem.
+- **Body:**
+
+```json
+{"name":"Atendimento","color":"#006781"}
+```
+
+- **Sucesso `201`:** retorna `id`, `name`, `slug`, `color` e `count: 0`.
+- **Erros:** `400` para nome/cor inválidos, `401` sem sessão e `403` para origem inválida.
+
+### `DELETE /api/admin/categories/:id`
+
+- **Descrição:** exclui a categoria e mantém seus artigos, removendo apenas o vínculo de categoria.
+- **Autenticação:** administrador.
+- **Headers:** cookie e `Origin` de mesma origem.
+- **Body:** não possui.
+- **Sucesso `200`:**
+
+```json
+{"ok":true,"affected_posts":2}
+```
+
+- **Erros:** `400` para ID inválido, `401`, `403` ou `404`.
+
+Exemplo:
+
+```bash
+curl -X DELETE http://localhost:3000/api/admin/categories/3 \
+  -H "Origin: http://localhost:3000" \
+  -H "Cookie: gtchat_session=TOKEN"
+```
+
 ### Erros comuns
 
 | Status | Significado |

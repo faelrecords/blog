@@ -418,6 +418,23 @@ Antes de instalar um pacote:
 
 Evoluções devem preservar compatibilidade e ser acompanhadas de migration, testes e documentação.
 
+## 18.1 Construtor visual da página inicial
+
+O editor de aparência é um construtor de seções controlado, inspirado no fluxo de uma grade visual:
+
+1. `HOME_BLOCK_LIBRARY` define os tipos permitidos e seus valores iniciais.
+2. `ThemeEditor` adiciona, duplica, reordena, oculta, configura e exclui instâncias.
+3. A prévia usa o estado local, sem publicar automaticamente.
+4. `PUT /api/admin/theme` valida tipo, ID e configuração de cada bloco.
+5. A transação atualiza, cria e remove registros de `home_blocks`.
+6. A home pública lê os blocos ativos na ordem persistida.
+
+Tipos atuais: `hero`, `latest`, `text` e `cta`. A antiga seção de categorias não é renderizada. CSS e JavaScript arbitrários continuam proibidos.
+
+## 18.2 Fluxo de categorias
+
+`CategoryManager` chama endpoints administrativos. Ao excluir uma categoria, uma transação define `posts.category_id` como `NULL` antes de remover a categoria, preservando todos os artigos. O editor de artigos atualiza a listagem após cada mutação.
+
 ## 19. Leitura complementar
 
 - [API.md](./API.md)

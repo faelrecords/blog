@@ -8,6 +8,7 @@ import Link from "@tiptap/extension-link";
 import Image from "@tiptap/extension-image";
 import Underline from "@tiptap/extension-underline";
 import Placeholder from "@tiptap/extension-placeholder";
+import { CategoryManager, type CategoryItem } from "@/components/category-manager";
 
 type PostData = {
   id?: number;
@@ -27,7 +28,7 @@ type PostData = {
   review_note?: string;
 };
 
-export function PostEditor({ initial, categories, canPublish }: { initial: PostData; categories: { id: number; name: string }[]; canPublish: boolean }) {
+export function PostEditor({ initial, categories, canPublish }: { initial: PostData; categories: CategoryItem[]; canPublish: boolean }) {
   const router = useRouter();
   const [post, setPost] = useState(initial);
   const [saved, setSaved] = useState("Tudo salvo");
@@ -136,7 +137,7 @@ export function PostEditor({ initial, categories, canPublish }: { initial: PostD
       <div className="editor-primary-actions stack"><button className="btn btn-outline" disabled={busy} onClick={() => save()}>Salvar rascunho</button>{primaryAction()}</div>
       <div className="field"><label>Resumo</label><textarea className="textarea" rows={4} value={post.excerpt} onChange={(event) => update("excerpt", event.target.value)} /></div>
       <div className="field"><label>Slug</label><input className="input" value={post.slug} onChange={(event) => update("slug", event.target.value)} /></div>
-      <div className="field"><label>Categoria</label><select className="select" value={post.category_id || ""} onChange={(event) => update("category_id", Number(event.target.value) || null)}><option value="">Selecione</option>{categories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}</select></div>
+      <div className="field"><label>Categoria</label><select className="select" value={post.category_id || ""} onChange={(event) => update("category_id", Number(event.target.value) || null)}><option value="">Selecione</option>{categories.map((category) => <option key={category.id} value={category.id}>{category.name}</option>)}</select>{canPublish && <details className="inline-category-settings"><summary>Gerenciar categorias</summary><CategoryManager categories={categories} compact/></details>}</div>
       <div className="field"><label>Imagem de capa</label>{post.cover_image && <img src={post.cover_image} alt="Prévia da capa" style={{ borderRadius: 10, maxHeight: 150, objectFit: "cover", width: "100%" }} />}<label className="btn btn-outline">Enviar imagem<input type="file" hidden accept="image/png,image/jpeg,image/webp,image/gif" onChange={(event) => event.target.files?.[0] && upload(event.target.files[0], true)} /></label><input className="input" placeholder="Texto alternativo" value={post.cover_alt} onChange={(event) => update("cover_alt", event.target.value)} /></div>
       <div className="field"><label>Tags separadas por vírgula</label><input className="input" value={post.tags_text} onChange={(event) => update("tags_text", event.target.value)} /></div>
       {canPublish && <div className="field"><label>Agendar publicação</label><input className="input" type="datetime-local" value={post.scheduled_at?.slice(0, 16) || ""} onChange={(event) => update("scheduled_at", event.target.value || null)} /></div>}

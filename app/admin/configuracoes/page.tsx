@@ -1,7 +1,31 @@
 import fs from "node:fs";
 import path from "node:path";
 import { AdminShell } from "@/components/admin-shell";
+import { CategoryManager, type CategoryItem } from "@/components/category-manager";
 import { SettingsForm } from "@/components/settings-form";
 import { requireUser } from "@/lib/auth";
 import { db, getSettings } from "@/lib/db";
-export default async function SettingsPage(){const user=await requireUser("admin");const dbPath=path.resolve(process.env.DATABASE_PATH||"./data/blog.sqlite");let size="0 KB";try{size=`${Math.ceil(fs.statSync(dbPath).size/1024)} KB`}catch{}const posts=(db.prepare("SELECT COUNT(*) total FROM posts").get() as {total:number}).total;return <AdminShell user={user} title="Configurações"><div className="app-content"><h1 className="app-title">Configurações da plataforma</h1><p className="muted">Gerencie identidade, SEO e acompanhe a saúde do sistema.</p><div className="settings-grid" style={{marginTop:24}}><SettingsForm settings={getSettings()}/><aside className="stack"><section className="panel"><h2>Saúde do sistema</h2><p className="form-success">● Banco de dados ativo</p><dl><dt className="muted">Driver</dt><dd><strong>SQLite 3</strong></dd><dt className="muted">Tamanho atual</dt><dd><strong>{size}</strong></dd><dt className="muted">Artigos armazenados</dt><dd><strong>{posts}</strong></dd><dt className="muted">Modo</dt><dd><strong>WAL + chaves estrangeiras</strong></dd></dl></section><section className="panel"><h3>Ambiente preparado</h3><p className="muted">Os dados ficam fora do código e podem ser movidos para um volume persistente no servidor Linux.</p></section></aside></div></div></AdminShell>}
+
+export default async function SettingsPage() {
+  const user = await requireUser("admin");
+  const dbPath = path.resolve(process.env.DATABASE_PATH || "./data/blog.sqlite");
+  let size = "0 KB";
+  try { size = `${Math.ceil(fs.statSync(dbPath).size / 1024)} KB`; } catch {}
+  const posts = (db.prepare("SELECT COUNT(*) total FROM posts").get() as { total: number }).total;
+  const categories = db.prepare(`SELECT c.id,c.name,c.slug,c.color,COUNT(p.id) count
+    FROM categories c LEFT JOIN posts p ON p.category_id=c.id
+    GROUP BY c.id ORDER BY c.name COLLATE NOCASE`).all() as CategoryItem[];
+
+  return <AdminShell user={user} title="Configurações"><div className="app-content">
+    <h1 className="app-title">Configurações da plataforma</h1>
+    <p className="muted">Gerencie identidade, SEO, categorias e acompanhe a saúde do sistema.</p>
+    <div className="settings-grid" style={{ marginTop: 24 }}>
+      <SettingsForm settings={getSettings()}/>
+      <aside className="stack">
+        <section className="panel"><h2>Saúde do sistema</h2><p className="form-success">● Banco de dados ativo</p><dl><dt className="muted">Driver</dt><dd><strong>SQLite 3</strong></dd><dt className="muted">Tamanho atual</dt><dd><strong>{size}</strong></dd><dt className="muted">Artigos armazenados</dt><dd><strong>{posts}</strong></dd><dt className="muted">Modo</dt><dd><strong>WAL + chaves estrangeiras</strong></dd></dl></section>
+        <section className="panel"><h3>Ambiente preparado</h3><p className="muted">Os dados ficam fora do código e podem ser movidos para um volume persistente no servidor Linux.</p></section>
+      </aside>
+    </div>
+    <div style={{ marginTop: 24 }}><CategoryManager categories={categories}/></div>
+  </div></AdminShell>;
+}

@@ -499,3 +499,49 @@ Interfaces que concentram listagem e mutações usam `<Entidade>Manager`.
 5. Reutilizar classes e tokens existentes.
 6. Documentar acessibilidade e estados.
 7. Adicionar o componente a este catálogo.
+
+---
+
+## 16. `CategoryManager`
+
+### Objetivo
+
+Criar, listar e excluir categorias sem sair das configurações ou do editor de artigos.
+
+### Quando utilizar
+
+Em interfaces exclusivas para administradores que precisam gerenciar a taxonomia editorial.
+
+### Quando não utilizar
+
+No blog público ou na área do redator. O endpoint também exige função `admin`.
+
+### Props
+
+| Prop | Tipo | Obrigatória | Descrição |
+|---|---|---:|---|
+| `categories` | `CategoryItem[]` | Sim | Categorias iniciais com ID, nome, slug, cor e contagem |
+| `compact` | `boolean` | Não | Adapta o componente ao painel recolhível do editor |
+
+### Exemplo
+
+```tsx
+<CategoryManager categories={categories} compact />
+```
+
+### Componentes relacionados
+
+`PostEditor`, `SettingsForm` e `AdminShell`.
+
+### Nomenclatura
+
+Gerenciadores completos de entidades usam o sufixo `Manager`.
+
+## 17. Componentes internos do construtor de tema
+
+- `BlockInspector`: edita somente os campos permitidos para a seção selecionada.
+- `SectionHeading`: mantém título e descrição com espaçamento consistente.
+- `ThemePreview`: representa seções ainda não publicadas em desktop, tablet e celular.
+- `AssetField`: envia, substitui ou remove logo e favicon.
+
+Esses componentes são internos de `ThemeEditor` e não devem ser importados por outras páginas.

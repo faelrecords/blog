@@ -1,119 +1,87 @@
 "use client";
 
-import { ChevronDown, ChevronUp, Eye, EyeOff, Monitor, RotateCcw, Save, Smartphone, Tablet } from "lucide-react";
+import { ChevronDown, ChevronUp, Copy, Eye, EyeOff, GripVertical, Monitor, Plus, RotateCcw, Save, Settings2, Smartphone, Tablet, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { DEFAULT_HOME_BLOCKS, DEFAULT_THEME_SETTINGS } from "@/lib/theme";
+import { DEFAULT_HOME_BLOCKS, DEFAULT_THEME_SETTINGS, HOME_BLOCK_LIBRARY, parseHomeBlockConfig, type HomeBlockConfig, type HomeBlockType } from "@/lib/theme";
 
-type Block = { id: string; type: string; title: string; enabled: boolean; position: number; config_json: string };
+type Block = { id: string; type: HomeBlockType; title: string; enabled: boolean; position: number; config_json: string };
 type InitialBlock = Omit<Block, "enabled"> & { enabled: number | boolean };
-type Tab = "marca" | "cores" | "pagina" | "chamada";
+type Tab = "marca" | "cores" | "pagina";
 type Device = "desktop" | "tablet" | "mobile";
-
-const tabs: { id: Tab; label: string }[] = [
-  { id: "marca", label: "Marca" },
-  { id: "cores", label: "Cores e fontes" },
-  { id: "pagina", label: "Página inicial" },
-  { id: "chamada", label: "Chamada final" },
-];
 const editableThemeKeys = ["logo_text", "logo_url", "favicon_url", "primary_color", "accent_color", "background_color", "text_color", "heading_font", "body_font", "cta_title", "cta_text", "cta_label", "cta_url"] as const;
 
 export function ThemeEditor({ initialSettings, initialBlocks }: { initialSettings: Record<string, string>; initialBlocks: InitialBlock[] }) {
   const router = useRouter();
-  const normalizedInitialBlocks = initialBlocks.map((block) => ({ ...block, enabled: Boolean(block.enabled) }));
-  const [settings, setSettings] = useState({ ...DEFAULT_THEME_SETTINGS, ...initialSettings });
-  const [blocks, setBlocks] = useState(normalizedInitialBlocks);
-  const [savedSettings, setSavedSettings] = useState({ ...DEFAULT_THEME_SETTINGS, ...initialSettings });
-  const [savedBlocks, setSavedBlocks] = useState(normalizedInitialBlocks);
+  const validTypes = new Set<HomeBlockType>(["hero", "latest", "text", "cta"]);
+  const normalized = initialBlocks.filter((block) => validTypes.has(block.type)).map((block, position) => ({ ...block, enabled: Boolean(block.enabled), position }));
+  const startingBlocks = normalized.length ? normalized : DEFAULT_HOME_BLOCKS.map((block) => ({ ...block }));
+  const initialTheme = { ...DEFAULT_THEME_SETTINGS, ...initialSettings };
+  const [settings, setSettings] = useState(initialTheme);
+  const [blocks, setBlocks] = useState<Block[]>(startingBlocks);
+  const [savedSettings, setSavedSettings] = useState(initialTheme);
+  const [savedBlocks, setSavedBlocks] = useState<Block[]>(startingBlocks);
   const [tab, setTab] = useState<Tab>("marca");
   const [device, setDevice] = useState<Device>("desktop");
+  const [selectedId, setSelectedId] = useState(startingBlocks[0]?.id || "");
+  const [draggingId, setDraggingId] = useState("");
   const [message, setMessage] = useState("");
   const [saving, setSaving] = useState(false);
-
   const dirty = useMemo(() => JSON.stringify(settings) !== JSON.stringify(savedSettings) || JSON.stringify(blocks) !== JSON.stringify(savedBlocks), [settings, blocks, savedSettings, savedBlocks]);
+  const selected = blocks.find((block) => block.id === selectedId);
 
   useEffect(() => {
     if (!dirty) return;
     const beforeUnload = (event: BeforeUnloadEvent) => { event.preventDefault(); event.returnValue = ""; };
-    const interceptLinks = (event: MouseEvent) => {
-      const anchor = (event.target as HTMLElement).closest("a");
-      if (!anchor || anchor.target === "_blank" || !anchor.href || anchor.href === window.location.href) return;
-      if (!window.confirm("Você tem alterações de aparência não publicadas. Deseja sair mesmo assim?")) event.preventDefault();
-    };
-    window.addEventListener("beforeunload", beforeUnload);
-    document.addEventListener("click", interceptLinks, true);
-    return () => { window.removeEventListener("beforeunload", beforeUnload); document.removeEventListener("click", interceptLinks, true); };
+    const interceptLinks = (event: MouseEvent) => { const anchor = (event.target as HTMLElement).closest("a"); if (anchor && anchor.target !== "_blank" && anchor.href && anchor.href !== location.href && !confirm("Há alterações não publicadas. Deseja sair mesmo assim?")) event.preventDefault(); };
+    addEventListener("beforeunload", beforeUnload); document.addEventListener("click", interceptLinks, true);
+    return () => { removeEventListener("beforeunload", beforeUnload); document.removeEventListener("click", interceptLinks, true); };
   }, [dirty]);
 
   const set = (key: string, value: string) => { setSettings((current) => ({ ...current, [key]: value })); setMessage(""); };
-  const updateBlocks = (next: Block[]) => { setBlocks(next.map((block, index) => ({ ...block, position: index }))); setMessage(""); };
-  const move = (index: number, delta: number) => {
-    const next = [...blocks]; const target = index + delta;
-    if (target < 0 || target >= next.length) return;
-    [next[index], next[target]] = [next[target], next[index]];
-    updateBlocks(next);
-  };
+  const updateBlocks = (next: Block[]) => { setBlocks(next.map((block, position) => ({ ...block, position }))); setMessage(""); };
+  const move = (index: number, delta: number) => { const next = [...blocks]; const target = index + delta; if (target < 0 || target >= next.length) return; [next[index], next[target]] = [next[target], next[index]]; updateBlocks(next); };
   const toggle = (id: string) => updateBlocks(blocks.map((block) => block.id === id ? { ...block, enabled: !block.enabled } : block));
+  const updateConfig = (id: string, key: keyof HomeBlockConfig, value: string | number) => updateBlocks(blocks.map((block) => block.id === id ? { ...block, config_json: JSON.stringify({ ...parseHomeBlockConfig(block.config_json), [key]: value }) } : block));
+  const addBlock = (type: HomeBlockType) => { const template = HOME_BLOCK_LIBRARY.find((item) => item.type === type)!; const id = `${type}-${Date.now().toString(36)}`; const block: Block = { id, type: template.type, title: template.title, enabled: true, position: blocks.length, config_json: JSON.stringify(template.defaultConfig) }; updateBlocks([...blocks, block]); setSelectedId(id); setTab("pagina"); };
+  const removeBlock = (block: Block) => { if (!confirm(`Excluir a seção “${block.title}”?`)) return; updateBlocks(blocks.filter((item) => item.id !== block.id)); if (selectedId === block.id) setSelectedId(blocks.find((item) => item.id !== block.id)?.id || ""); };
+  const duplicate = (block: Block) => { const id = `${block.type}-${Date.now().toString(36)}`; const copy = { ...block, id, title: `${block.title} (cópia)`, position: blocks.length }; updateBlocks([...blocks, copy]); setSelectedId(id); };
+  const dropOn = (targetId: string) => { if (!draggingId || draggingId === targetId) return; const next = [...blocks]; const from = next.findIndex((item) => item.id === draggingId); const to = next.findIndex((item) => item.id === targetId); const [moved] = next.splice(from, 1); next.splice(to, 0, moved); updateBlocks(next); setDraggingId(""); };
 
-  async function upload(file: File, key: "logo_url" | "favicon_url") {
-    const form = new FormData(); form.append("file", file);
-    const response = await fetch("/api/media", { method: "POST", body: form });
-    const data = await response.json();
-    if (response.ok) set(key, data.url); else setMessage(data.error || "Não foi possível enviar a imagem.");
-  }
-
-  async function save() {
-    setSaving(true); setMessage("Salvando alterações...");
-    const response = await fetch("/api/admin/theme", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ settings, blocks }) });
-    if (response.ok) {
-      setSavedSettings({ ...settings }); setSavedBlocks(blocks.map((block) => ({ ...block })));
-      setMessage("Tema publicado com sucesso."); router.refresh();
-    } else setMessage("Não foi possível publicar as alterações.");
-    setSaving(false);
-  }
-
+  async function upload(file: File, key: "logo_url" | "favicon_url") { const form = new FormData(); form.append("file", file); const response = await fetch("/api/media", { method: "POST", body: form }); const data = await response.json(); if (response.ok) set(key, data.url); else setMessage(data.error || "Não foi possível enviar a imagem."); }
+  async function save() { setSaving(true); setMessage("Salvando alterações..."); const response = await fetch("/api/admin/theme", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ settings, blocks }) }); if (response.ok) { setSavedSettings({ ...settings }); setSavedBlocks(blocks.map((block) => ({ ...block }))); setMessage("Tema publicado com sucesso."); router.refresh(); } else { const data = await response.json(); setMessage(data.error || "Não foi possível publicar as alterações."); } setSaving(false); }
   function discard() { setSettings({ ...savedSettings }); setBlocks(savedBlocks.map((block) => ({ ...block }))); setMessage("Alterações descartadas."); }
-  function restoreDefaults() {
-    if (!window.confirm("Restaurar os valores padrão no formulário? Nada será publicado até você salvar.")) return;
-    setSettings((current) => ({ ...current, ...Object.fromEntries(editableThemeKeys.map((key) => [key, DEFAULT_THEME_SETTINGS[key]])) }));
-    setBlocks(DEFAULT_HOME_BLOCKS.map((block) => ({ ...block })));
-    setMessage("Padrões carregados. Revise a prévia antes de publicar.");
-  }
+  function restoreDefaults() { if (!confirm("Restaurar o formulário ao padrão? Só será aplicado quando você publicar.")) return; setSettings((current) => ({ ...current, ...Object.fromEntries(editableThemeKeys.map((key) => [key, DEFAULT_THEME_SETTINGS[key]])) })); const defaults = DEFAULT_HOME_BLOCKS.map((block) => ({ ...block })); setBlocks(defaults); setSelectedId(defaults[0]?.id || ""); setMessage("Padrões carregados para revisão."); }
 
-  const brandName = settings.logo_text || "GTChat";
-  return <div className="theme-workspace">
+  const brand = settings.logo_text || "GTChat";
+  return <div className={`theme-workspace ${tab === "pagina" ? "builder-active" : ""}`}>
     <section className="panel theme-controls">
-      <div className="theme-tabs" role="tablist" aria-label="Configurações de aparência">{tabs.map((item) => <button key={item.id} type="button" role="tab" aria-selected={tab === item.id} className={tab === item.id ? "active" : ""} onClick={() => setTab(item.id)}>{item.label}</button>)}</div>
-
-      <div className="theme-tab-panel" role="tabpanel">
-        {tab === "marca" && <div className="theme-form-section"><div><h2>Identidade da marca</h2><p className="muted">A logo será usada no cabeçalho, rodapé e prévia.</p></div><div className="field"><label>Nome da marca</label><input className="input" value={settings.logo_text} onChange={(event) => set("logo_text", event.target.value)}/></div><AssetField label="Logo do cabeçalho e rodapé" value={settings.logo_url} alt={brandName} accept="image/png,image/jpeg,image/webp" onUpload={(file) => upload(file, "logo_url")} onRemove={() => set("logo_url", "")}/><AssetField label="Favicon" value={settings.favicon_url} alt="Favicon" accept="image/png,image/jpeg,image/webp" compact onUpload={(file) => upload(file, "favicon_url")} onRemove={() => set("favicon_url", "")}/></div>}
-
-        {tab === "cores" && <div className="theme-form-section"><div><h2>Cores e tipografia</h2><p className="muted">Escolha uma combinação legível e coerente com a marca.</p></div><div className="theme-color-grid">{[["Cor principal", "primary_color"], ["Cor de apoio", "accent_color"], ["Fundo", "background_color"], ["Texto", "text_color"]].map(([label, key]) => <div className="field" key={key}><label>{label}</label><div className="color-field"><input aria-label={`Selecionar ${label.toLowerCase()}`} type="color" value={settings[key]} onChange={(event) => set(key, event.target.value)}/><input className="input" value={settings[key]} onChange={(event) => set(key, event.target.value)}/></div></div>)}</div><div className="theme-font-grid"><div className="field"><label>Fonte dos títulos</label><select className="select" value={settings.heading_font} onChange={(event) => set("heading_font", event.target.value)}><option>Hanken Grotesk</option><option>Inter</option><option>Arial</option><option>Georgia</option></select></div><div className="field"><label>Fonte do corpo</label><select className="select" value={settings.body_font} onChange={(event) => set("body_font", event.target.value)}><option>Inter</option><option>Hanken Grotesk</option><option>Arial</option><option>Georgia</option></select></div></div></div>}
-
-        {tab === "pagina" && <div className="theme-form-section"><div><h2>Blocos da página inicial</h2><p className="muted">Organize a ordem e escolha o que fica visível.</p></div><div className="theme-block-list">{blocks.map((block, index) => <div className={`block-row ${block.enabled ? "" : "disabled"}`} key={block.id}><button type="button" className="block-visibility" onClick={() => toggle(block.id)} aria-label={block.enabled ? `Ocultar ${block.title}` : `Exibir ${block.title}`}>{block.enabled ? <Eye/> : <EyeOff/>}</button><div><strong>{block.title}</strong><small>{block.enabled ? "Visível" : "Oculto"}</small></div><div className="block-move-actions"><button type="button" onClick={() => move(index, -1)} disabled={index === 0} aria-label={`Mover ${block.title} para cima`}><ChevronUp/> <span>Subir</span></button><button type="button" onClick={() => move(index, 1)} disabled={index === blocks.length - 1} aria-label={`Mover ${block.title} para baixo`}><ChevronDown/> <span>Descer</span></button></div></div>)}</div></div>}
-
-        {tab === "chamada" && <div className="theme-form-section"><div><h2>Chamada final</h2><p className="muted">Configure o convite exibido perto do final da página inicial.</p></div><div className="field"><label>Título</label><input className="input" value={settings.cta_title} onChange={(event) => set("cta_title", event.target.value)}/></div><div className="field"><label>Texto</label><textarea className="textarea" rows={4} value={settings.cta_text} onChange={(event) => set("cta_text", event.target.value)}/></div><div className="theme-font-grid"><div className="field"><label>Texto do botão</label><input className="input" value={settings.cta_label} onChange={(event) => set("cta_label", event.target.value)}/></div><div className="field"><label>Link do botão</label><input className="input" type="url" value={settings.cta_url} onChange={(event) => set("cta_url", event.target.value)}/></div></div></div>}
+      <div className="theme-tabs" role="tablist">{([{ id: "marca", label: "Marca" }, { id: "cores", label: "Cores e fontes" }, { id: "pagina", label: "Seções da página" }] as { id: Tab; label: string }[]).map((item) => <button key={item.id} role="tab" aria-selected={tab === item.id} className={tab === item.id ? "active" : ""} onClick={() => setTab(item.id)}>{item.label}</button>)}</div>
+      <div className="theme-tab-panel">
+        {tab === "marca" && <div className="theme-form-section"><SectionHeading title="Identidade da marca" text="A mesma logo será usada no cabeçalho, rodapé e prévia."/><div className="field"><label>Nome da marca</label><input className="input" value={settings.logo_text} onChange={(event) => set("logo_text", event.target.value)}/></div><AssetField label="Logo do cabeçalho e rodapé" value={settings.logo_url} alt={brand} accept="image/png,image/jpeg,image/webp" onUpload={(file) => upload(file, "logo_url")} onRemove={() => set("logo_url", "")}/><AssetField label="Favicon" value={settings.favicon_url} alt="Favicon" accept="image/png,image/jpeg,image/webp" compact onUpload={(file) => upload(file, "favicon_url")} onRemove={() => set("favicon_url", "")}/></div>}
+        {tab === "cores" && <div className="theme-form-section"><SectionHeading title="Cores e tipografia" text="Escolha uma combinação legível e coerente com a marca."/><div className="theme-color-grid">{[["Cor principal", "primary_color"], ["Cor de apoio", "accent_color"], ["Fundo", "background_color"], ["Texto", "text_color"]].map(([label, key]) => <div className="field" key={key}><label>{label}</label><div className="color-field"><input aria-label={`Selecionar ${label.toLowerCase()}`} type="color" value={settings[key]} onChange={(event) => set(key, event.target.value)}/><input className="input" value={settings[key]} onChange={(event) => set(key, event.target.value)}/></div></div>)}</div><div className="theme-font-grid"><FontSelect label="Fonte dos títulos" value={settings.heading_font} onChange={(value) => set("heading_font", value)}/><FontSelect label="Fonte do corpo" value={settings.body_font} onChange={(value) => set("body_font", value)}/></div></div>}
+        {tab === "pagina" && <div className="theme-form-section"><SectionHeading title="Editor de seções" text="Monte a página em blocos: adicione, edite, arraste, oculte ou exclua seções."/><div className="section-library" aria-label="Adicionar seção">{HOME_BLOCK_LIBRARY.map((item) => <button type="button" key={item.type} onClick={() => addBlock(item.type)}><Plus size={16}/><span><strong>{item.title}</strong><small>{item.description}</small></span></button>)}</div><div className="section-builder"><div className="section-canvas"><div className="section-canvas-title"><strong>Estrutura da página</strong><small>{blocks.length} seção(ões)</small></div>{blocks.length ? blocks.map((block, index) => <div draggable className={`section-row ${selectedId === block.id ? "selected" : ""} ${block.enabled ? "" : "disabled"}`} key={block.id} onDragStart={() => setDraggingId(block.id)} onDragOver={(event) => event.preventDefault()} onDrop={() => dropOn(block.id)}><GripVertical className="section-grip" size={19}/><button type="button" className="section-select" onClick={() => setSelectedId(block.id)}><strong>{block.title}</strong><small>{block.enabled ? "Visível" : "Oculta"}</small></button><div className="section-actions"><button type="button" onClick={() => toggle(block.id)} aria-label={block.enabled ? "Ocultar" : "Exibir"}>{block.enabled ? <Eye size={16}/> : <EyeOff size={16}/>}</button><button type="button" onClick={() => move(index, -1)} disabled={index === 0} aria-label="Mover para cima"><ChevronUp size={16}/></button><button type="button" onClick={() => move(index, 1)} disabled={index === blocks.length - 1} aria-label="Mover para baixo"><ChevronDown size={16}/></button><button type="button" onClick={() => duplicate(block)} aria-label="Duplicar"><Copy size={16}/></button><button type="button" className="danger" onClick={() => removeBlock(block)} aria-label="Excluir"><Trash2 size={16}/></button></div></div>) : <div className="section-empty">A página está vazia. Adicione uma seção acima.</div>}</div><div className="section-inspector">{selected ? <BlockInspector block={selected} settings={settings} update={(key, value) => updateConfig(selected.id, key, value)}/> : <div className="section-empty"><Settings2 size={22}/> Selecione uma seção para editar.</div>}</div></div></div>}
       </div>
-
-      <div className="theme-action-bar"><div className="theme-save-state"><span className={dirty ? "dirty-dot" : "saved-dot"}/>{dirty ? "Alterações não publicadas" : "Tudo publicado"}</div><div className="theme-action-buttons"><button className="btn btn-ghost" type="button" onClick={restoreDefaults}><RotateCcw size={17}/> Restaurar padrão</button><button className="btn btn-outline" type="button" disabled={!dirty || saving} onClick={discard}>Descartar</button><button className="btn btn-primary" type="button" disabled={!dirty || saving} onClick={save}><Save size={17}/>{saving ? "Publicando..." : "Publicar alterações"}</button></div></div>
-      {message && <p className={message.includes("sucesso") ? "form-success" : "theme-message"}>{message}</p>}
+      <div className="theme-action-bar"><div className="theme-save-state"><span className={dirty ? "dirty-dot" : "saved-dot"}/>{dirty ? "Alterações não publicadas" : "Tudo publicado"}</div><div className="theme-action-buttons"><button className="btn btn-ghost" onClick={restoreDefaults}><RotateCcw size={17}/> Restaurar padrão</button><button className="btn btn-outline" disabled={!dirty || saving} onClick={discard}>Descartar</button><button className="btn btn-primary" disabled={!dirty || saving} onClick={save}><Save size={17}/>{saving ? "Publicando..." : "Publicar alterações"}</button></div></div>
+      {message && <p className="theme-message" aria-live="polite">{message}</p>}
     </section>
-
-    <details className="preview-details" open><summary>Prévia do blog</summary><aside className="preview-frame"><div className="preview-toolbar"><strong>Prévia</strong><div className="device-switch" aria-label="Tamanho da prévia">{(["desktop", "tablet", "mobile"] as Device[]).map((item) => <button type="button" key={item} className={device === item ? "active" : ""} onClick={() => setDevice(item)} aria-label={`Prévia em ${item}`}>{item === "desktop" ? <Monitor/> : item === "tablet" ? <Tablet/> : <Smartphone/>}</button>)}</div></div><ThemePreview settings={settings} blocks={blocks} device={device}/></aside></details>
+    <details className="preview-details" open><summary>Prévia do blog</summary><aside className="preview-frame"><div className="preview-toolbar"><strong>Prévia</strong><div className="device-switch">{(["desktop", "tablet", "mobile"] as Device[]).map((item) => <button key={item} className={device === item ? "active" : ""} onClick={() => setDevice(item)} aria-label={`Prévia ${item}`}>{item === "desktop" ? <Monitor/> : item === "tablet" ? <Tablet/> : <Smartphone/>}</button>)}</div></div><ThemePreview settings={settings} blocks={blocks} device={device}/></aside></details>
   </div>;
 }
 
-function AssetField({ label, value, alt, accept, compact, onUpload, onRemove }: { label: string; value: string; alt: string; accept: string; compact?: boolean; onUpload: (file: File) => void; onRemove: () => void }) {
-  return <div className="field"><label>{label}</label><div className={`asset-field ${compact ? "compact" : ""}`}>{value ? <img src={value} alt={alt}/> : <div className="asset-placeholder">Nenhuma imagem definida</div>}<div className="actions"><label className="btn btn-outline">{value ? "Substituir" : "Enviar imagem"}<input hidden type="file" accept={accept} onChange={(event) => event.target.files?.[0] && onUpload(event.target.files[0])}/></label>{value && <button className="btn btn-ghost" type="button" onClick={onRemove}>Remover</button>}</div></div></div>;
+function SectionHeading({ title, text }: { title: string; text: string }) { return <div className="theme-section-heading"><h2>{title}</h2><p>{text}</p></div>; }
+function FontSelect({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) { return <div className="field"><label>{label}</label><select className="select" value={value} onChange={(event) => onChange(event.target.value)}>{["Hanken Grotesk", "Inter", "Arial", "Georgia"].map((font) => <option key={font}>{font}</option>)}</select></div>; }
+function AssetField({ label, value, alt, accept, compact, onUpload, onRemove }: { label: string; value: string; alt: string; accept: string; compact?: boolean; onUpload: (file: File) => void; onRemove: () => void }) { return <div className="field"><label>{label}</label><div className={`asset-field ${compact ? "compact" : ""}`}>{value ? <img src={value} alt={alt}/> : <div className="asset-placeholder">Nenhuma imagem definida</div>}<div className="actions"><label className="btn btn-outline">{value ? "Substituir" : "Enviar imagem"}<input hidden type="file" accept={accept} onChange={(event) => event.target.files?.[0] && onUpload(event.target.files[0])}/></label>{value && <button className="btn btn-ghost" onClick={onRemove}>Remover</button>}</div></div></div>; }
+
+function BlockInspector({ block, settings, update }: { block: Block; settings: Record<string, string>; update: (key: keyof HomeBlockConfig, value: string | number) => void }) {
+  const config = parseHomeBlockConfig(block.config_json);
+  return <div className="inspector-fields"><div className="inspector-title"><Settings2 size={18}/><div><strong>Editar {block.title}</strong><small>Configurações desta seção</small></div></div>{block.type === "hero" && <p className="muted">O destaque usa automaticamente o artigo marcado como principal.</p>}{block.type === "latest" && <><Field label="Título" value={config.title || "Conteúdos recentes"} onChange={(value) => update("title", value)}/><Field label="Subtítulo" value={config.subtitle || ""} onChange={(value) => update("subtitle", value)}/><div className="theme-font-grid"><NumberField label="Quantidade" value={config.count || 3} min={1} max={6} onChange={(value) => update("count", value)}/><div className="field"><label>Colunas</label><select className="select" value={config.columns || 3} onChange={(event) => update("columns", Number(event.target.value))}><option value={1}>1</option><option value={2}>2</option><option value={3}>3</option></select></div></div></>}{block.type === "text" && <><Field label="Título" value={config.title || "Nova seção"} onChange={(value) => update("title", value)}/><div className="field"><label>Texto</label><textarea className="textarea" rows={5} value={config.text || ""} onChange={(event) => update("text", event.target.value)}/></div><div className="field"><label>Alinhamento</label><select className="select" value={config.align || "left"} onChange={(event) => update("align", event.target.value)}><option value="left">À esquerda</option><option value="center">Centralizado</option></select></div></>}{block.type === "cta" && <><Field label="Título" value={config.title || settings.cta_title} onChange={(value) => update("title", value)}/><div className="field"><label>Texto</label><textarea className="textarea" rows={4} value={config.text || settings.cta_text} onChange={(event) => update("text", event.target.value)}/></div><Field label="Texto do botão" value={config.buttonLabel || settings.cta_label} onChange={(value) => update("buttonLabel", value)}/><Field label="Link do botão" value={config.buttonUrl || settings.cta_url} onChange={(value) => update("buttonUrl", value)}/></>}</div>;
 }
+function Field({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) { return <div className="field"><label>{label}</label><input className="input" value={value} onChange={(event) => onChange(event.target.value)}/></div>; }
+function NumberField({ label, value, min, max, onChange }: { label: string; value: number; min: number; max: number; onChange: (value: number) => void }) { return <div className="field"><label>{label}</label><input className="input" type="number" min={min} max={max} value={value} onChange={(event) => onChange(Math.max(min, Math.min(max, Number(event.target.value))))}/></div>; }
 
 function ThemePreview({ settings, blocks, device }: { settings: Record<string, string>; blocks: Block[]; device: Device }) {
   const style = { "--preview-primary": settings.primary_color, "--preview-accent": settings.accent_color, "--preview-bg": settings.background_color, "--preview-text": settings.text_color, "--preview-heading": settings.heading_font, "--preview-body": settings.body_font } as React.CSSProperties;
   const brand = settings.logo_text || "GTChat";
-  return <div className={`preview-stage device-${device}`} data-device={device}><div className="preview-surface" style={style}><header className="preview-site-header"><div className="preview-brand">{settings.logo_url ? <img src={settings.logo_url} alt={brand}/> : <span>GT</span>}<strong>{brand}</strong></div><nav className="preview-site-nav">Início&nbsp;&nbsp; Artigos&nbsp;&nbsp; Sobre</nav><span className="preview-menu-icon">☰</span></header><main className="preview-site-main">{blocks.filter((block) => block.enabled).map((block) => {
-    if (block.type === "hero") return <section className="preview-hero" key={block.id}><div><small>IA E BOTS</small><h1>Como agentes de IA transformam o atendimento</h1><p>Uma experiência editorial clara, moderna e conectada à sua marca.</p><button>Ler artigo</button></div><div className="preview-hero-art"/></section>;
-    if (block.type === "latest") return <section className="preview-section" key={block.id}><h2>Conteúdos recentes</h2><div className="preview-card-grid">{[1, 2, 3].map((item) => <article key={item}><div/><strong>Estratégias para atender melhor</strong><small>5 min de leitura</small></article>)}</div></section>;
-    if (block.type === "categories") return <section className="preview-section" key={block.id}><h2>Explore por assunto</h2><div className="preview-category-row">{["WhatsApp", "IA e Bots", "Produto"].map((item) => <span key={item}>{item}</span>)}</div></section>;
-    return <section className="preview-cta" key={block.id}><h2>{settings.cta_title}</h2><p>{settings.cta_text}</p><button>{settings.cta_label}</button></section>;
-  })}</main><footer className="preview-site-footer"><div className="preview-brand">{settings.logo_url ? <img src={settings.logo_url} alt={brand}/> : <span>GT</span>}<strong>{brand}</strong></div><small>{settings.footer_text}</small></footer></div></div>;
+  return <div className="preview-canvas"><div className={`preview-stage device-${device}`}><div className="preview-surface" style={style}><header className="preview-site-header"><div className="preview-brand">{settings.logo_url ? <img src={settings.logo_url} alt={brand}/> : <span>GT</span>}<strong>{brand}</strong></div><nav className="preview-site-nav">Início&nbsp;&nbsp; Artigos&nbsp;&nbsp; Sobre</nav><span className="preview-menu-icon">☰</span></header><main className="preview-site-main">{blocks.filter((block) => block.enabled).map((block) => { const config = parseHomeBlockConfig(block.config_json); if (block.type === "hero") return <section className="preview-hero" key={block.id}><div><small className="preview-kicker">IA E BOTS</small><h2>Como agentes de IA transformam o atendimento</h2><p>Uma experiência editorial clara, moderna e conectada à sua marca.</p><button>Ler artigo</button></div><div className="preview-hero-art"/></section>; if (block.type === "latest") return <section className="preview-section" key={block.id}><h2>{config.title || "Conteúdos recentes"}</h2>{config.subtitle && <p>{config.subtitle}</p>}<div className={`preview-card-grid preview-columns-${config.columns || 3}`}>{Array.from({ length: config.count || 3 }, (_, item) => <article key={item}><div/><strong>Estratégias para atender melhor</strong><small>5 min de leitura</small></article>)}</div></section>; if (block.type === "text") return <section className={`preview-text align-${config.align || "left"}`} key={block.id}><h2>{config.title || "Nova seção"}</h2><p>{config.text || "Adicione aqui o conteúdo desta seção."}</p></section>; return <section className="preview-cta" key={block.id}><h2>{config.title || settings.cta_title}</h2><p>{config.text || settings.cta_text}</p><button>{config.buttonLabel || settings.cta_label}</button></section>; })}</main><footer className="preview-site-footer"><div className="preview-brand">{settings.logo_url ? <img src={settings.logo_url} alt={brand}/> : <span>GT</span>}<strong>{brand}</strong></div><small>{settings.footer_text}</small></footer></div></div></div>;
 }

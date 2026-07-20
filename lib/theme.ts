@@ -19,9 +19,37 @@ export const DEFAULT_THEME_SETTINGS: Record<string, string> = {
   cta_url: "https://vibecodex.pro",
 };
 
-export const DEFAULT_HOME_BLOCKS = [
-  { id: "hero", type: "hero", title: "Artigo em destaque", enabled: true, position: 0, config_json: "{}" },
-  { id: "latest", type: "latest", title: "Últimas publicações", enabled: true, position: 1, config_json: "{}" },
-  { id: "categories", type: "categories", title: "Destaques por categoria", enabled: true, position: 2, config_json: "{}" },
-  { id: "cta", type: "cta", title: "Chamada institucional", enabled: true, position: 3, config_json: "{}" },
+export type HomeBlockType = "hero" | "latest" | "text" | "cta";
+
+export type HomeBlockConfig = {
+  title?: string;
+  subtitle?: string;
+  text?: string;
+  buttonLabel?: string;
+  buttonUrl?: string;
+  count?: number;
+  columns?: 1 | 2 | 3;
+  align?: "left" | "center";
+};
+
+export const HOME_BLOCK_LIBRARY: { type: HomeBlockType; title: string; description: string; defaultConfig: HomeBlockConfig }[] = [
+  { type: "hero", title: "Artigo em destaque", description: "Capa grande usando o artigo marcado como destaque.", defaultConfig: {} },
+  { type: "latest", title: "Grade de artigos", description: "Lista configurável com as publicações mais recentes.", defaultConfig: { title: "Conteúdos recentes", subtitle: "Ideias práticas para equipes que querem atender melhor.", count: 3, columns: 3 } },
+  { type: "text", title: "Texto institucional", description: "Título e texto livre para apresentar uma ideia.", defaultConfig: { title: "Uma seção para sua mensagem", text: "Escreva aqui um texto curto e objetivo.", align: "left" } },
+  { type: "cta", title: "Chamada com botão", description: "Bloco de conversão com texto, link e botão.", defaultConfig: {} },
 ];
+
+export const DEFAULT_HOME_BLOCKS = [
+  { id: "hero", type: "hero" as HomeBlockType, title: "Artigo em destaque", enabled: true, position: 0, config_json: "{}" },
+  { id: "latest", type: "latest" as HomeBlockType, title: "Grade de artigos", enabled: true, position: 1, config_json: JSON.stringify(HOME_BLOCK_LIBRARY[1].defaultConfig) },
+  { id: "cta", type: "cta" as HomeBlockType, title: "Chamada com botão", enabled: true, position: 2, config_json: "{}" },
+];
+
+export function parseHomeBlockConfig(value: string): HomeBlockConfig {
+  try {
+    const parsed = JSON.parse(value) as unknown;
+    return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed as HomeBlockConfig : {};
+  } catch {
+    return {};
+  }
+}

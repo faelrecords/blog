@@ -2,6 +2,7 @@ import Database from "better-sqlite3";
 import fs from "node:fs";
 import path from "node:path";
 import { hashPassword } from "@/lib/security";
+import type { HomeBlockType } from "@/lib/theme";
 
 const globalDb = globalThis as unknown as { gtchatDb?: Database.Database };
 
@@ -39,7 +40,7 @@ export function getSettings() {
 }
 
 export function getHomeBlocks() {
-  return db.prepare("SELECT * FROM home_blocks ORDER BY position").all() as { id: string; type: string; title: string; enabled: number; position: number; config_json: string }[];
+  return db.prepare("SELECT * FROM home_blocks WHERE type <> 'categories' ORDER BY position").all() as { id: string; type: HomeBlockType; title: string; enabled: number; position: number; config_json: string }[];
 }
 
 export function publicPosts(limit = 12, category?: string, query?: string) {

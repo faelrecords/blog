@@ -42,7 +42,7 @@ export function AdminMobileMenu({ admin, name, username }: { admin: boolean; nam
         <nav className="drawer-nav">
           <Link ref={firstLinkRef} href="/" onClick={close}>Ver blog</Link>
           {admin && <><Link href="/admin" onClick={close}>Visão geral</Link><Link href="/admin/artigos" onClick={close}>Artigos</Link><Link href="/admin/usuarios" onClick={close}>Usuários</Link><Link href="/admin/aparencia" onClick={close}>Aparência</Link><Link href="/admin/configuracoes" onClick={close}>Configurações</Link></>}
-          <Link href="/publicar" onClick={close}>{admin ? "Criar artigo" : "Meus artigos"}</Link>
+          {!admin && <Link href="/publicar" onClick={close}>Meus artigos</Link>}
         </nav>
         <div className="admin-drawer-user"><strong>{name}</strong><small>@{username}</small><form action="/api/auth/logout" method="post"><button className="btn btn-outline" type="submit">Sair</button></form></div>
       </aside>
