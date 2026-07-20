@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>GTChat - New Post</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;700&amp;family=Inter:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container-low": "#eff4ff",
+                      "on-error": "#ffffff",
+                      "error-container": "#ffdad6",
+                      "primary-container": "#34a81e",
+                      "on-secondary": "#ffffff",
+                      "surface-variant": "#d3e4fe",
+                      "inverse-surface": "#213145",
+                      "secondary": "#006781",
+                      "tertiary-fixed": "#e0e3e5",
+                      "surface": "#f8f9ff",
+                      "error": "#ba1a1a",
+                      "on-surface-variant": "#3f4a39",
+                      "outline": "#6f7b68",
+                      "on-surface": "#0b1c30",
+                      "on-background": "#0b1c30",
+                      "background": "#f8f9ff",
+                      "on-primary-fixed": "#022100",
+                      "surface-container-highest": "#d3e4fe",
+                      "surface-dim": "#cbdbf5",
+                      "surface-container": "#e5eeff",
+                      "primary": "#106e00",
+                      "on-tertiary-fixed-variant": "#444749",
+                      "on-secondary-fixed-variant": "#004d62",
+                      "tertiary": "#5c5f61",
+                      "on-primary": "#ffffff",
+                      "surface-tint": "#106e00",
+                      "primary-fixed-dim": "#6cdf52",
+                      "on-secondary-fixed": "#001f29",
+                      "on-error-container": "#93000a",
+                      "tertiary-fixed-dim": "#c4c7c9",
+                      "on-tertiary": "#ffffff",
+                      "on-primary-container": "#043300",
+                      "surface-bright": "#f8f9ff",
+                      "inverse-primary": "#6cdf52",
+                      "on-primary-fixed-variant": "#0a5300",
+                      "on-secondary-container": "#006079",
+                      "secondary-container": "#83dafd",
+                      "on-tertiary-container": "#292c2e",
+                      "surface-container-lowest": "#ffffff",
+                      "secondary-fixed-dim": "#7ad2f4",
+                      "on-tertiary-fixed": "#191c1e",
+                      "outline-variant": "#becab4",
+                      "tertiary-container": "#909395",
+                      "surface-container-high": "#dce9ff",
+                      "secondary-fixed": "#baeaff",
+                      "primary-fixed": "#88fd6b",
+                      "inverse-on-surface": "#eaf1ff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "gutter": "16px",
+                      "unit": "4px",
+                      "component-gap-md": "16px",
+                      "container-padding": "24px",
+                      "component-gap-sm": "8px"
+              },
+              "fontFamily": {
+                      "label-md": ["Inter"],
+                      "headline-lg-mobile": ["Hanken Grotesk"],
+                      "body-sm": ["Inter"],
+                      "body-md": ["Inter"],
+                      "headline-sm": ["Hanken Grotesk"],
+                      "body-lg": ["Inter"],
+                      "headline-md": ["Hanken Grotesk"],
+                      "headline-lg": ["Hanken Grotesk"]
+              },
+              "fontSize": {
+                      "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "headline-lg-mobile": ["26px", {"lineHeight": "32px", "fontWeight": "700"}],
+                      "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}],
+                      "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                      "body-lg": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                      "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                      "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="bg-surface-container-lowest dark:bg-surface-dim font-body-md text-body-md docked full-width top-0 sticky z-50 border-b border-outline-variant dark:border-outline shadow-sm">
+<div class="flex justify-between items-center h-16 px-6 max-w-full mx-auto">
+<div class="flex items-center gap-8">
+<div class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim">GTChat</div>
+<nav class="hidden md:flex gap-6 h-full items-center">
+<a class="text-on-surface-variant dark:text-on-surface hover:text-primary dark:hover:text-primary-fixed-dim transition-colors h-full flex items-center" href="#">Home</a>
+<a class="text-primary dark:text-primary-fixed-dim border-b-2 border-primary dark:border-primary-fixed-dim h-full flex items-center px-1" href="#">Blog</a>
+<a class="text-on-surface-variant dark:text-on-surface hover:text-primary dark:hover:text-primary-fixed-dim transition-colors h-full flex items-center" href="#">Dashboard</a>
+<a class="text-on-surface-variant dark:text-on-surface hover:text-primary dark:hover:text-primary-fixed-dim transition-colors h-full flex items-center" href="#">Settings</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="bg-primary-container text-on-primary-fixed rounded-lg px-4 py-2 font-label-md text-label-md flex items-center gap-2 hover:bg-primary hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add</span>
+                    New Post
+                </button>
+<div class="flex items-center gap-2">
+<button class="p-2 rounded-full hover:bg-surface-container-low dark:hover:bg-surface-container-highest transition-all text-on-surface-variant">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 rounded-full hover:bg-surface-container-low dark:hover:bg-surface-container-highest transition-all text-on-surface-variant">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Workspace -->
+<main class="flex-grow flex flex-col md:flex-row w-full max-w-[1440px] mx-auto">
+<!-- Editor Area (Left) -->
+<div class="flex-grow p-container-padding flex flex-col gap-6">
+<!-- Breadcrumb / Status -->
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2 text-on-surface-variant text-body-sm">
+<a class="hover:text-primary transition-colors" href="#">Blog</a>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+<span class="font-semibold">New Post</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="px-2 py-1 rounded bg-surface-container-high text-on-surface-variant text-label-md font-label-md">Draft</span>
+<span class="text-on-surface-variant text-body-sm">Last saved: Just now</span>
+</div>
+</div>
+<!-- Editor Card -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant p-8 flex flex-col gap-8 flex-grow">
+<!-- Title Input -->
+<div>
+<input autofocus="" class="w-full border-none bg-transparent font-headline-lg text-headline-lg text-on-surface placeholder:text-outline focus:ring-0 p-0 resize-none outline-none" placeholder="Post Title" type="text"/>
+</div>
+<!-- Rich Text Toolbar -->
+<div class="flex items-center gap-2 p-2 bg-surface-container-low rounded-lg border border-outline-variant/50 sticky top-4 z-10">
+<button class="p-2 rounded hover:bg-surface-container-highest text-on-surface-variant transition-colors" title="Bold"><span class="material-symbols-outlined text-[20px]">format_bold</span></button>
+<button class="p-2 rounded hover:bg-surface-container-highest text-on-surface-variant transition-colors" title="Italic"><span class="material-symbols-outlined text-[20px]">format_italic</span></button>
+<button class="p-2 rounded hover:bg-surface-container-highest text-on-surface-variant transition-colors" title="Underline"><span class="material-symbols-outlined text-[20px]">format_underlined</span></button>
+<div class="w-px h-6 bg-outline-variant mx-1"></div>
+<button class="p-2 rounded hover:bg-surface-container-highest text-on-surface-variant transition-colors" title="Heading"><span class="material-symbols-outlined text-[20px]">title</span></button>
+<button class="p-2 rounded hover:bg-surface-container-highest text-on-surface-variant transition-colors" title="Quote"><span class="material-symbols-outlined text-[20px]">format_quote</span></button>
+<button class="p-2 rounded hover:bg-surface-container-highest text-on-surface-variant transition-colors" title="Code"><span class="material-symbols-outlined text-[20px]">code</span></button>
+<div class="w-px h-6 bg-outline-variant mx-1"></div>
+<button class="p-2 rounded hover:bg-surface-container-highest text-on-surface-variant transition-colors" title="Link"><span class="material-symbols-outlined text-[20px]">link</span></button>
+<button class="p-2 rounded hover:bg-surface-container-highest text-on-surface-variant transition-colors" title="Add Image"><span class="material-symbols-outlined text-[20px]">image</span></button>
+</div>
+<!-- Content Area -->
+<div class="flex-grow min-h-[400px]">
+<textarea class="w-full h-full border-none bg-transparent font-body-lg text-body-lg text-on-surface placeholder:text-outline focus:ring-0 p-0 resize-none outline-none leading-relaxed" placeholder="Start writing your post content here..."></textarea>
+</div>
+</div>
+</div>
+<!-- Meta Sidebar (Right) -->
+<aside class="w-full md:w-[360px] bg-surface-container-lowest border-l border-outline-variant p-container-padding flex flex-col gap-8 h-screen md:sticky md:top-16 overflow-y-auto hidden md:flex">
+<!-- Publish Actions -->
+<div class="flex flex-col gap-4">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Publishing</h3>
+<div class="flex gap-3">
+<button class="flex-1 py-2 px-4 rounded-lg border border-secondary text-secondary hover:bg-secondary-container hover:text-on-secondary-container transition-colors font-label-md text-label-md text-center">Preview</button>
+<button class="flex-1 py-2 px-4 rounded-lg bg-primary-container text-on-primary-fixed hover:bg-primary hover:text-on-primary transition-colors font-label-md text-label-md text-center">Publish Post</button>
+</div>
+</div>
+<div class="w-full h-px bg-outline-variant/50"></div>
+<!-- Category -->
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface-variant">Category</label>
+<div class="relative">
+<select class="w-full appearance-none bg-surface border border-outline-variant rounded-lg py-3 px-4 font-body-md text-body-md text-on-surface focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary-container transition-all">
+<option>Select a category...</option>
+<option>Product Updates</option>
+<option>Customer Stories</option>
+<option>AI Tips &amp; Tricks</option>
+<option>Industry News</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">expand_more</span>
+</div>
+</div>
+<!-- Cover Image -->
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface-variant">Cover Image</label>
+<div class="border-2 border-dashed border-outline-variant rounded-xl p-6 flex flex-col items-center justify-center gap-3 bg-surface hover:bg-surface-container-low transition-colors cursor-pointer group">
+<div class="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">add_photo_alternate</span>
+</div>
+<div class="text-center">
+<p class="font-body-md text-body-md text-on-surface font-medium">Click to upload</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">SVG, PNG, JPG or GIF (max. 5MB)</p>
+</div>
+</div>
+</div>
+<!-- Tags -->
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface-variant">Tags</label>
+<input class="w-full bg-surface border border-outline-variant rounded-lg py-3 px-4 font-body-md text-body-md text-on-surface focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary-container transition-all" placeholder="Add tags separated by comma" type="text"/>
+<div class="flex flex-wrap gap-2 mt-2">
+<span class="px-3 py-1 bg-surface-container-high rounded-full font-body-sm text-body-sm text-on-surface flex items-center gap-1">
+                        Artificial Intelligence
+                        <span class="material-symbols-outlined text-[16px] cursor-pointer hover:text-error">close</span>
+</span>
+<span class="px-3 py-1 bg-surface-container-high rounded-full font-body-sm text-body-sm text-on-surface flex items-center gap-1">
+                        Chatbots
+                        <span class="material-symbols-outlined text-[16px] cursor-pointer hover:text-error">close</span>
+</span>
+</div>
+</div>
+<!-- Schedule -->
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface-variant">Schedule Publication</label>
+<div class="relative">
+<input class="w-full bg-surface border border-outline-variant rounded-lg py-3 px-4 font-body-md text-body-md text-on-surface focus:outline-none focus:border-secondary focus:ring-2 focus:ring-secondary-container transition-all text-on-surface-variant" type="datetime-local"/>
+</div>
+</div>
+</aside>
+</main>
+</body></html>

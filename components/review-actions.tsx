@@ -1,0 +1,4 @@
+"use client";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+export function ReviewActions({id,status}:{id:number;status:string}){const router=useRouter();const [busy,setBusy]=useState(false);async function act(action:string){let body={};if(action==="request-changes"){const note=prompt("Descreva objetivamente o que precisa ser ajustado:");if(!note)return;body={note}}setBusy(true);const res=await fetch(`/api/posts/${id}/${action}`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(body)});if(!res.ok)alert((await res.json()).error);router.refresh();setBusy(false)}return <div className="actions">{status==="em_revisao"&&<><button disabled={busy} className="btn btn-primary" onClick={()=>act("approve")}>Aprovar</button><button disabled={busy} className="btn btn-outline" onClick={()=>act("request-changes")}>Solicitar ajustes</button></>}<a className="btn btn-ghost" href={`/publicar/${id}`}>Editar</a></div>}

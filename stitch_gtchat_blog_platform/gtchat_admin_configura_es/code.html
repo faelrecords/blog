@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>GTChat Admin - Settings</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "surface-container-low": "#eff4ff",
+                      "on-error": "#ffffff",
+                      "error-container": "#ffdad6",
+                      "primary-container": "#34a81e",
+                      "on-secondary": "#ffffff",
+                      "surface-variant": "#d3e4fe",
+                      "inverse-surface": "#213145",
+                      "secondary": "#006781",
+                      "tertiary-fixed": "#e0e3e5",
+                      "surface": "#f8f9ff",
+                      "error": "#ba1a1a",
+                      "on-surface-variant": "#3f4a39",
+                      "outline": "#6f7b68",
+                      "on-surface": "#0b1c30",
+                      "on-background": "#0b1c30",
+                      "background": "#f8f9ff",
+                      "on-primary-fixed": "#022100",
+                      "surface-container-highest": "#d3e4fe",
+                      "surface-dim": "#cbdbf5",
+                      "surface-container": "#e5eeff",
+                      "primary": "#106e00",
+                      "on-tertiary-fixed-variant": "#444749",
+                      "on-secondary-fixed-variant": "#004d62",
+                      "tertiary": "#5c5f61",
+                      "on-primary": "#ffffff",
+                      "surface-tint": "#106e00",
+                      "primary-fixed-dim": "#6cdf52",
+                      "on-secondary-fixed": "#001f29",
+                      "on-error-container": "#93000a",
+                      "tertiary-fixed-dim": "#c4c7c9",
+                      "on-tertiary": "#ffffff",
+                      "on-primary-container": "#043300",
+                      "surface-bright": "#f8f9ff",
+                      "inverse-primary": "#6cdf52",
+                      "on-primary-fixed-variant": "#0a5300",
+                      "on-secondary-container": "#006079",
+                      "secondary-container": "#83dafd",
+                      "on-tertiary-container": "#292c2e",
+                      "surface-container-lowest": "#ffffff",
+                      "secondary-fixed-dim": "#7ad2f4",
+                      "on-tertiary-fixed": "#191c1e",
+                      "outline-variant": "#becab4",
+                      "tertiary-container": "#909395",
+                      "surface-container-high": "#dce9ff",
+                      "secondary-fixed": "#baeaff",
+                      "primary-fixed": "#88fd6b",
+                      "inverse-on-surface": "#eaf1ff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "gutter": "16px",
+                      "unit": "4px",
+                      "component-gap-md": "16px",
+                      "container-padding": "24px",
+                      "component-gap-sm": "8px"
+              },
+              "fontFamily": {
+                      "label-md": [
+                              "Inter"
+                      ],
+                      "headline-lg-mobile": [
+                              "Hanken Grotesk"
+                      ],
+                      "body-sm": [
+                              "Inter"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "headline-sm": [
+                              "Hanken Grotesk"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ],
+                      "headline-md": [
+                              "Hanken Grotesk"
+                      ],
+                      "headline-lg": [
+                              "Hanken Grotesk"
+                      ]
+              },
+              "fontSize": {
+                      "label-md": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "26px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-sm": [
+                              "13px",
+                              {
+                                      "lineHeight": "18px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "body-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-sm": [
+                              "20px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "body-lg": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-md": [
+                              "24px",
+                              {
+                                      "lineHeight": "32px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-lg": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3, h4, h5, h6, .font-headline { font-family: 'Hanken Grotesk', sans-serif; }
+    </style>
+</head>
+<body class="bg-surface text-on-surface flex h-screen overflow-hidden">
+<!-- SideNavBar -->
+<aside class="bg-surface-container-low text-secondary font-label-md text-label-md h-screen w-[280px] fixed left-0 top-0 shadow-md flex flex-col p-4 gap-2 z-20">
+<div class="mb-8 mt-4 px-2">
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary">Admin Console</h1>
+<p class="text-on-surface-variant mt-1">GTChat Platform</p>
+</div>
+<nav class="flex-1 flex flex-col gap-1">
+<!-- Inactive -->
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-highest rounded-lg transition-colors duration-200 cursor-pointer active:opacity-80" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Overview</span>
+</a>
+<!-- Inactive -->
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-highest rounded-lg transition-colors duration-200 cursor-pointer active:opacity-80" href="#">
+<span class="material-symbols-outlined" data-icon="chat">chat</span>
+<span>Live Chat</span>
+</a>
+<!-- Inactive -->
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-highest rounded-lg transition-colors duration-200 cursor-pointer active:opacity-80" href="#">
+<span class="material-symbols-outlined" data-icon="insights">insights</span>
+<span>Analytics</span>
+</a>
+<!-- Inactive -->
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-highest rounded-lg transition-colors duration-200 cursor-pointer active:opacity-80" href="#">
+<span class="material-symbols-outlined" data-icon="library_books">library_books</span>
+<span>Knowledge Base</span>
+</a>
+<!-- Active -->
+<a class="flex items-center gap-3 px-4 py-3 bg-secondary-container text-on-secondary-container rounded-lg font-bold transition-colors duration-200 cursor-pointer active:opacity-80" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span>Admin Settings</span>
+</a>
+</nav>
+<div class="mt-auto flex flex-col gap-2">
+<button class="w-full bg-primary-container text-on-primary py-2 rounded-lg font-label-md text-label-md hover:opacity-90 transition-opacity">
+                Support Portal
+            </button>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-highest rounded-lg transition-colors duration-200 cursor-pointer active:opacity-80" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span>Logout</span>
+</a>
+<div class="flex items-center gap-3 px-4 py-2 mt-2">
+<div class="w-8 h-8 rounded-full bg-surface-variant flex items-center justify-center overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a corporate admin user, smiling warmly, wearing a neat button-down shirt. The background is a clean, softly lit office environment. High resolution, modern aesthetic, reflecting reliability and competence." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCymaJaYrshSVnEIwAY6NZpPDbjcX-mdKH7pKvszt381Hgs5z6nuxBAWam_Vppl90PYisoyU32VVRtDARMZMPTerXzsxT6mvkiUAwlCyXeWi8X7jmWdL7Amf7rG7nWWZP5NXqJtmV1tD3RiWrDnkUN8zWNms9IgRCXy90Ze7kCOWejrQbepNJNqM3JYFVqqyh-eokkwUGfZBeCccVOtPp1d848RD0P3ggOhIcFMY65qDZx71c52-2frbT7xCIxeesIOGiucDf1e8hsp"/>
+</div>
+<div>
+<span class="block text-on-surface font-label-md text-label-md">Admin User Avatar</span>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="ml-[280px] flex-1 overflow-y-auto bg-surface relative">
+<!-- TopNavBar (for main content area context) -->
+<header class="bg-surface-container-lowest text-primary font-body-md text-body-md shadow-sm h-16 px-6 w-full sticky top-0 z-10 flex justify-between items-center border-b border-outline-variant">
+<h2 class="font-headline-md text-headline-md font-bold text-on-surface">Platform Settings</h2>
+<div class="flex items-center gap-4">
+<div class="relative">
+<input class="pl-10 pr-4 py-2 bg-surface rounded-lg border border-outline-variant focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary text-body-sm w-64" placeholder="Search settings..." type="text"/>
+<span class="material-symbols-outlined absolute left-3 top-2 text-on-surface-variant text-[20px]" data-icon="search">search</span>
+</div>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-all">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+</div>
+</header>
+<div class="p-container-padding max-w-5xl mx-auto space-y-gutter pb-24">
+<!-- Page Header -->
+<div class="mb-8">
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">Manage your GTChat instance, configure SEO, and monitor system health.</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+<!-- General Settings Column -->
+<div class="lg:col-span-2 space-y-gutter">
+<!-- Site Configuration Card -->
+<section class="bg-surface-container-lowest rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.05)] p-6 border border-[#E2E8F0]">
+<div class="flex items-center gap-3 mb-6 pb-4 border-b border-outline-variant">
+<span class="material-symbols-outlined text-secondary" data-icon="public">public</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Site Configuration</h3>
+</div>
+<form class="space-y-6">
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-2">Site Title</label>
+<input class="w-full bg-surface border border-outline-variant rounded-lg px-4 py-2 font-body-md text-body-md text-on-surface focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-colors" type="text" value="GTChat Main Portal"/>
+<p class="mt-1 font-body-sm text-body-sm text-on-surface-variant">The name of your platform as it appears to users.</p>
+</div>
+<div>
+<label class="block font-label-md text-label-md text-on-surface mb-2">SEO Meta Description</label>
+<textarea class="w-full bg-surface border border-outline-variant rounded-lg px-4 py-2 font-body-md text-body-md text-on-surface focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-colors resize-none" rows="3">Enterprise-grade AI chat platform for seamless customer support and agent productivity.</textarea>
+<p class="mt-1 font-body-sm text-body-sm text-on-surface-variant">Brief description used by search engines.</p>
+</div>
+<div class="pt-4 flex justify-end">
+<button class="bg-primary-container text-on-primary px-6 py-2 rounded-lg font-label-md text-label-md hover:bg-primary transition-colors shadow-sm" type="button">
+                                    Save Changes
+                                </button>
+</div>
+</form>
+</section>
+<!-- Social Links Card -->
+<section class="bg-surface-container-lowest rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.05)] p-6 border border-[#E2E8F0]">
+<div class="flex items-center gap-3 mb-6 pb-4 border-b border-outline-variant">
+<span class="material-symbols-outlined text-secondary" data-icon="share">share</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Social Media Integrations</h3>
+</div>
+<form class="space-y-4">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant w-6 text-center" data-icon="link">link</span>
+<div class="flex-1">
+<input class="w-full bg-surface border border-outline-variant rounded-lg px-4 py-2 font-body-md text-body-md text-on-surface focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-colors" placeholder="https://twitter.com/gtchat" type="url" value="https://twitter.com/gtchat"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface-variant w-6 text-center" data-icon="link">link</span>
+<div class="flex-1">
+<input class="w-full bg-surface border border-outline-variant rounded-lg px-4 py-2 font-body-md text-body-md text-on-surface focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-colors" placeholder="https://linkedin.com/company/gtchat" type="url" value="https://linkedin.com/company/gtchat"/>
+</div>
+</div>
+<button class="mt-4 text-secondary font-label-md text-label-md flex items-center gap-2 hover:underline" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="add">add</span>
+                                Add another link
+                            </button>
+</form>
+</section>
+</div>
+<!-- System Status Column -->
+<div class="space-y-gutter">
+<!-- Database Status Card -->
+<section class="bg-surface-container-lowest rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.05)] p-6 border border-[#E2E8F0]">
+<div class="flex items-center gap-3 mb-6 pb-4 border-b border-outline-variant">
+<span class="material-symbols-outlined text-secondary" data-icon="database">database</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">System Health</h3>
+</div>
+<div class="space-y-6">
+<div class="flex items-start gap-4">
+<div class="w-10 h-10 rounded-full bg-[#E5F6DF] flex items-center justify-center flex-shrink-0 mt-1">
+<span class="material-symbols-outlined text-primary-container" data-icon="check_circle">check_circle</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface">Database Connection</h4>
+<p class="font-body-sm text-body-sm text-primary mt-1 flex items-center gap-1">
+<span class="w-2 h-2 rounded-full bg-primary-container inline-block"></span> Active
+                                    </p>
+<div class="mt-3 bg-surface p-3 rounded-lg border border-outline-variant">
+<div class="flex justify-between items-center mb-2">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Driver</span>
+<span class="font-label-md text-label-md text-on-surface bg-surface-variant px-2 py-0.5 rounded text-[10px]">SQLite3</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Path</span>
+<span class="font-body-sm text-body-sm text-on-surface truncate ml-4 max-w-[120px]">/var/data/gtchat.db</span>
+</div>
+</div>
+</div>
+</div>
+<hr class="border-outline-variant"/>
+<div class="flex items-start gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-variant flex items-center justify-center flex-shrink-0 mt-1">
+<span class="material-symbols-outlined text-secondary" data-icon="memory">memory</span>
+</div>
+<div class="flex-1">
+<h4 class="font-label-md text-label-md text-on-surface">Cache Memory</h4>
+<div class="mt-2 w-full bg-surface rounded-full h-2 border border-outline-variant overflow-hidden">
+<div class="bg-secondary h-2 rounded-full" style="width: 45%"></div>
+</div>
+<div class="flex justify-between mt-1">
+<span class="font-body-sm text-body-sm text-on-surface-variant">45% used</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">512 MB</span>
+</div>
+</div>
+</div>
+<button class="w-full bg-surface border border-secondary text-secondary px-4 py-2 rounded-lg font-label-md text-label-md hover:bg-secondary hover:text-on-secondary transition-colors mt-4" type="button">
+                                Run Diagnostics
+                            </button>
+</div>
+</section>
+</div>
+</div>
+</div>
+</main>
+</body></html>

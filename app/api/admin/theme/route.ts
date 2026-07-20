@@ -1,0 +1,9 @@
+import { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
+import { apiUser } from "@/lib/auth";
+import { db, getHomeBlocks, getSettings } from "@/lib/db";
+import { sameOrigin } from "@/lib/request";
+const schema=z.object({settings:z.record(z.string(),z.string().max(1000)),blocks:z.array(z.object({id:z.string(),enabled:z.boolean(),position:z.number().int().min(0).max(20)})).max(10)});
+const allowed=new Set(["logo_text","logo_url","favicon_url","primary_color","accent_color","background_color","text_color","heading_font","body_font","cta_title","cta_text","cta_label","cta_url"]);
+export async function GET(){if(!await apiUser("admin"))return NextResponse.json({error:"Não autorizado"},{status:401});return NextResponse.json({settings:getSettings(),blocks:getHomeBlocks()})}
+export async function PUT(request:NextRequest){const user=await apiUser("admin");if(!user)return NextResponse.json({error:"Não autorizado"},{status:401});if(!sameOrigin(request))return NextResponse.json({error:"Origem inválida"},{status:403});const parsed=schema.safeParse(await request.json());if(!parsed.success)return NextResponse.json({error:"Configuração inválida"},{status:400});const save=db.prepare("INSERT INTO site_settings (key,value) VALUES (?,?) ON CONFLICT(key) DO UPDATE SET value=excluded.value");const update=db.prepare("UPDATE home_blocks SET enabled=?,position=? WHERE id=?");const transaction=db.transaction(()=>{for(const [key,value] of Object.entries(parsed.data.settings))if(allowed.has(key))save.run(key,value);for(const block of parsed.data.blocks)update.run(block.enabled?1:0,block.position,block.id)});transaction();db.prepare("INSERT INTO audit_log (user_id,action,entity,created_at) VALUES (?,?,?,?)").run(user.id,"editar","tema",new Date().toISOString());return NextResponse.json({ok:true})}

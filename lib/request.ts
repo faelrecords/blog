@@ -1,0 +1,2 @@
+import type { NextRequest } from "next/server";
+export function sameOrigin(request:NextRequest){const origin=request.headers.get("origin");if(!origin)return true;try{const originHost=new URL(origin).host;const forwarded=(request.headers.get("x-forwarded-host")||"").split(",")[0].trim();const host=(request.headers.get("host")||"").split(",")[0].trim();return [request.nextUrl.host,forwarded,host].filter(Boolean).includes(originHost)}catch{return false}}

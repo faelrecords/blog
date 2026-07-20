@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>GTChat - Blog</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=Hanken+Grotesk:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-low": "#eff4ff",
+                        "on-error": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "primary-container": "#34a81e",
+                        "on-secondary": "#ffffff",
+                        "surface-variant": "#d3e4fe",
+                        "inverse-surface": "#213145",
+                        "secondary": "#006781",
+                        "tertiary-fixed": "#e0e3e5",
+                        "surface": "#f8f9ff",
+                        "error": "#ba1a1a",
+                        "on-surface-variant": "#3f4a39",
+                        "outline": "#6f7b68",
+                        "on-surface": "#0b1c30",
+                        "on-background": "#0b1c30",
+                        "background": "#f8f9ff",
+                        "on-primary-fixed": "#022100",
+                        "surface-container-highest": "#d3e4fe",
+                        "surface-dim": "#cbdbf5",
+                        "surface-container": "#e5eeff",
+                        "primary": "#106e00",
+                        "on-tertiary-fixed-variant": "#444749",
+                        "on-secondary-fixed-variant": "#004d62",
+                        "tertiary": "#5c5f61",
+                        "on-primary": "#ffffff",
+                        "surface-tint": "#106e00",
+                        "primary-fixed-dim": "#6cdf52",
+                        "on-secondary-fixed": "#001f29",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed-dim": "#c4c7c9",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-container": "#043300",
+                        "surface-bright": "#f8f9ff",
+                        "inverse-primary": "#6cdf52",
+                        "on-primary-fixed-variant": "#0a5300",
+                        "on-secondary-container": "#006079",
+                        "secondary-container": "#83dafd",
+                        "on-tertiary-container": "#292c2e",
+                        "surface-container-lowest": "#ffffff",
+                        "secondary-fixed-dim": "#7ad2f4",
+                        "on-tertiary-fixed": "#191c1e",
+                        "outline-variant": "#becab4",
+                        "tertiary-container": "#909395",
+                        "surface-container-high": "#dce9ff",
+                        "secondary-fixed": "#baeaff",
+                        "primary-fixed": "#88fd6b",
+                        "inverse-on-surface": "#eaf1ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "unit": "4px",
+                        "component-gap-md": "16px",
+                        "container-padding": "24px",
+                        "component-gap-sm": "8px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Inter"],
+                        "headline-lg-mobile": ["Hanken Grotesk"],
+                        "body-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-sm": ["Hanken Grotesk"],
+                        "body-lg": ["Inter"],
+                        "headline-md": ["Hanken Grotesk"],
+                        "headline-lg": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-lg-mobile": ["26px", { "lineHeight": "32px", "fontWeight": "700" }],
+                        "body-sm": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "fontWeight": "600" }],
+                        "headline-lg": ["32px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined[style*="'FILL' 1"] {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        .bento-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .bento-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0px 12px 32px rgba(0, 0, 0, 0.12);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-md">
+<!-- Top Navigation Bar -->
+<nav class="bg-surface-container-lowest dark:bg-surface-dim border-b border-outline-variant dark:border-outline shadow-sm docked full-width top-0 sticky z-50">
+<div class="flex justify-between items-center h-16 px-6 max-w-full mx-auto">
+<div class="flex items-center gap-4">
+<img alt="GTChat Logo" class="h-8 w-8 object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCc0L3yRdfZcpoiKEZDVYZZcZGSYpUt6j1YW3XyCxbz_OkC_xiMG1zEdu1GrtLJcfz53kbMFT2cHlCCPR_vNRadTgV5py4xiIK_1Mml0DeYs8JfU0Yj18_7Q4SCgEHsJgyrEEiEkGvwB_6hj3BJHN2PQMjt_kOYVvEoMlE5thnTEguBYiV0UQFKx0WOyfzWUdoz2tdtv7N45HJhRjKfnNpc8ZjIzvuVXJ2k4SNYx1xsalagjBYCKN6-7ghc0OlgB9D9L_wAvqmvBMfC"/>
+<span class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed-dim">GTChat</span>
+</div>
+<div class="hidden md:flex gap-8 items-center">
+<a class="font-body-md text-body-md text-on-surface-variant dark:text-on-surface hover:text-primary dark:hover:text-primary-fixed-dim transition-colors active:scale-95 duration-150" href="#">Home</a>
+<a class="font-body-md text-body-md text-primary dark:text-primary-fixed-dim border-b-2 border-primary dark:border-primary-fixed-dim pb-1 active:scale-95 duration-150" href="#">Blog</a>
+<a class="font-body-md text-body-md text-on-surface-variant dark:text-on-surface hover:text-primary dark:hover:text-primary-fixed-dim transition-colors active:scale-95 duration-150" href="#">Dashboard</a>
+<a class="font-body-md text-body-md text-on-surface-variant dark:text-on-surface hover:text-primary dark:hover:text-primary-fixed-dim transition-colors active:scale-95 duration-150" href="#">Settings</a>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" style="font-size: 20px;">search</span>
+<input class="pl-10 pr-4 py-2 bg-surface-container-low border border-outline-variant rounded-lg font-body-sm text-on-surface focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary/50 w-64 transition-all" placeholder="Search..." type="text"/>
+</div>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-lg font-label-md hover:bg-primary/90 transition-colors hidden sm:block">New Post</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors hover:bg-surface-container-low dark:hover:bg-surface-container-highest p-2 rounded-full"><span class="material-symbols-outlined">notifications</span></button>
+<button class="text-on-surface-variant hover:text-primary transition-colors hover:bg-surface-container-low dark:hover:bg-surface-container-highest p-2 rounded-full"><span class="material-symbols-outlined">account_circle</span></button>
+</div>
+</div>
+</nav>
+<!-- Main Content -->
+<main class="flex-grow w-full max-w-7xl mx-auto px-container-padding py-8">
+<!-- Header & Filters -->
+<div class="mb-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+<div>
+<h1 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-2">GTChat Resources &amp; Insights</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">Discover the latest strategies, AI updates, and customer service insights to elevate your communication.</p>
+</div>
+<div class="flex gap-2 overflow-x-auto pb-2 w-full md:w-auto hide-scrollbar">
+<button class="px-4 py-2 rounded-full bg-secondary-container text-on-secondary-container font-label-md whitespace-nowrap">All Topics</button>
+<button class="px-4 py-2 rounded-full bg-surface-container-highest text-on-surface-variant hover:bg-secondary-container/50 hover:text-on-secondary-container font-label-md whitespace-nowrap transition-colors">WhatsApp</button>
+<button class="px-4 py-2 rounded-full bg-surface-container-highest text-on-surface-variant hover:bg-secondary-container/50 hover:text-on-secondary-container font-label-md whitespace-nowrap transition-colors">AI &amp; Bots</button>
+<button class="px-4 py-2 rounded-full bg-surface-container-highest text-on-surface-variant hover:bg-secondary-container/50 hover:text-on-secondary-container font-label-md whitespace-nowrap transition-colors">Customer Success</button>
+</div>
+</div>
+<!-- Bento Grid Blog Layout -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Featured Post (Spans 8 cols on desktop) -->
+<article class="bento-card md:col-span-8 bg-surface-container-lowest rounded-xl overflow-hidden border border-outline-variant/30 flex flex-col relative">
+<div class="h-64 md:h-80 w-full relative">
+<div class="bg-cover bg-center w-full h-full" data-alt="A modern office setting with glowing holographic data streams representing AI integration into customer service. High-key lighting, bright white and vibrant green accents, clean minimalist tech aesthetic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBw1xCntr0zI2C8M1u3ANnVM_WOL0kUljURD731bsOy0tPhp_Ce_SB86p8sE86f4RjjZ_R2zP5Hxp50BQnXUkc3uhP8fSxkVglJipCJ5tIt_Ietu_nlJ0XjPr3ivxSUm9TOq4bxIKIBOFq4cjRNdSdGZQHe65lp8bdNQ8rIXH7-99hHteweswZ8MATunSB5fZwvkmE9GqfnzKfy-SniZQKOvLOK9czapbKNPiIVyb-M8nEz3b9iP08Xv8DgScX0tLxwhssafTQ9X17j')"></div>
+<div class="absolute top-4 left-4">
+<span class="bg-primary/90 text-on-primary px-3 py-1 rounded-full font-label-md text-[10px] uppercase tracking-wider backdrop-blur-sm shadow-sm">AI &amp; Bots</span>
+</div>
+</div>
+<div class="p-6 flex-grow flex flex-col">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-3 hover:text-secondary cursor-pointer transition-colors">Revolutionizing Support: How AI Agents Handle 80% of Tier 1 Queries</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6 line-clamp-3">Discover the structural changes necessary to implement AI-driven support systems without sacrificing the human touch. We explore data routing, intent recognition, and seamless escalation protocols.</p>
+<div class="mt-auto flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center text-primary font-bold text-sm">JS</div>
+<span class="font-label-md text-label-md text-on-surface">Jane Smith</span>
+</div>
+<span class="font-label-md text-label-md text-tertiary">Oct 24, 2024</span>
+</div>
+</div>
+</article>
+<!-- Secondary Featured (Spans 4 cols on desktop) -->
+<article class="bento-card md:col-span-4 bg-surface-container-lowest rounded-xl overflow-hidden border border-outline-variant/30 flex flex-col">
+<div class="h-48 w-full relative">
+<div class="bg-cover bg-center w-full h-full" data-alt="A stylized smartphone screen displaying a WhatsApp chat interface, surrounded by floating connection lines in soft blue and green hues against a clean, light grey background. Modern corporate tech style." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB1WvmTW3mONLj47S0KWERnXEBRuihH4x0OjQgn3Yy7gIeHb3TQdEl12GN4PlMEuYl_TmkM3TEgqC2E_G3qhAjzjpp-FS6nl1TWWsADp30OwAM7VsJylGR1DnnPwxU3LOG_Zz9OhCROd3NacIHPiS6rQttE3np1wcUxcITYDZyy4kYvH0Ik50kPuSnchkWKFWB2sWK4__xyjBTP1AzC1Cy-mNzlqnXoOCNMi-2vf8QmEPJLCXMuPgt1oQFssluvJsIlgmqMswo7-yMk')"></div>
+<div class="absolute top-4 left-4">
+<span class="bg-secondary/90 text-on-primary px-3 py-1 rounded-full font-label-md text-[10px] uppercase tracking-wider backdrop-blur-sm shadow-sm">WhatsApp</span>
+</div>
+</div>
+<div class="p-6 flex-grow flex flex-col">
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-2 hover:text-secondary cursor-pointer transition-colors">Mastering WhatsApp Business API for Global Reach</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-4 line-clamp-2">Learn the nuances of template messaging, opt-ins, and 24-hour windows to maximize engagement.</p>
+<div class="mt-auto flex items-center justify-between">
+<span class="font-label-md text-label-md text-tertiary">Oct 22, 2024</span>
+<button class="text-secondary hover:text-primary transition-colors p-1"><span class="material-symbols-outlined" style="font-size: 20px;">arrow_forward</span></button>
+</div>
+</div>
+</article>
+<!-- Standard Grid Items (Span 4 cols each) -->
+<article class="bento-card md:col-span-4 bg-surface-container-lowest rounded-xl overflow-hidden border border-outline-variant/30 flex flex-col">
+<div class="h-40 w-full relative">
+<div class="bg-cover bg-center w-full h-full" data-alt="A clean, isometric illustration of a data dashboard with analytics charts and metrics, rendered in crisp whites, soft greys, and secondary blue accents. High clarity functionalism." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAG_kZw6MevqTEGs5k01oFtitEAOlFx-fE8QtZ4o81mjFFk6yDe1NXOQsWqPyStS7CtNGw_ehutJD3ylolSYL6i5TDgkbS0aqjsWv29hTTijPOPXbETQCU8KMzHvJP5EmQpFHwr2pRYiSoFJvsyyZtkoGbB4jDU0KiygSdbeUQvVDyaGGB93rF2g_H19-Nrg0bf1E1p-ibLyWGk2nVkeIeHxK8i5Lt4l2GbS0mu7UXEtNjf3NsthlAOdLEGXlbe4dSGZG_RFjOR8k7L')"></div>
+<div class="absolute top-4 left-4">
+<span class="bg-tertiary/90 text-on-primary px-3 py-1 rounded-full font-label-md text-[10px] uppercase tracking-wider backdrop-blur-sm shadow-sm">Metrics</span>
+</div>
+</div>
+<div class="p-5 flex-grow flex flex-col">
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-2 hover:text-secondary cursor-pointer transition-colors">5 Metrics Every Support Team Should Track Daily</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-4 line-clamp-2">Move beyond CSAT. Understand how FRT and Resolution Rate intertwine in modern omnichannel environments.</p>
+<div class="mt-auto flex items-center justify-between">
+<span class="font-label-md text-label-md text-tertiary">Oct 18, 2024</span>
+</div>
+</div>
+</article>
+<article class="bento-card md:col-span-4 bg-surface-container-lowest rounded-xl overflow-hidden border border-outline-variant/30 flex flex-col">
+<div class="h-40 w-full relative">
+<div class="bg-cover bg-center w-full h-full" data-alt="A conceptual rendering of multiple communication channels converging into a single unified inbox, glowing lines connecting icons for SMS, Email, and Chat. Bright, white background with blue and green lines." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBZbqE3RSgkNvROrlLX3OTNx10CFXEeFQlMiP2TmOiSOAU54qT5zBpGs0hfyqz281X_yXD7h4mA9Vz3Q9E50J-eCrXY0zs7epkx6viGEv4n-DXfSYbA7ekmCYfUw4gs1sLFsROKPVgb0g1lHKzcS9_nX30F8We1_Sz5KE01jhK4KqUnFXSji57k62P-lQLfRCcyxscTwT6BPO1KRBeu-1RG68PNVWBcXKinPnwutaWcZrWTcAXyWhpxKy3SeYjil3bUxeS83oscoOBm')"></div>
+<div class="absolute top-4 left-4">
+<span class="bg-primary/90 text-on-primary px-3 py-1 rounded-full font-label-md text-[10px] uppercase tracking-wider backdrop-blur-sm shadow-sm">Product</span>
+</div>
+</div>
+<div class="p-5 flex-grow flex flex-col">
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-2 hover:text-secondary cursor-pointer transition-colors">New Feature: Unified Omni-Channel Inbox V2</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-4 line-clamp-2">We've redesigned the agent workspace for better information density and faster context switching.</p>
+<div class="mt-auto flex items-center justify-between">
+<span class="font-label-md text-label-md text-tertiary">Oct 15, 2024</span>
+</div>
+</div>
+</article>
+<article class="bento-card md:col-span-4 bg-surface-container-lowest rounded-xl overflow-hidden border border-outline-variant/30 flex flex-col">
+<div class="h-40 w-full relative">
+<div class="bg-cover bg-center w-full h-full" data-alt="Two stylized figures shaking hands, overlaid with a subtle geometric grid and digital connection nodes. Clean, modern corporate style, light grey background with soft green highlights." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDwV_sC2AVRIn3zHLzoLwnrUcXRC3Vxd172s4CaK1F_9eQWdyI--PSqI_xb8qDuDfK9Z9qB-5roBKup4d70WzIr-c_FD9NDplCn8WGBLLZdTX_YFKHzszvP3KM7Z9KZXIBEdtebSI8Vn-6YoNm324NsUEbB0pcRJ9U2FNLi1zUiQ4HxXbauHgNcuZ9EFUhVPlmZIobYM7_3HmFkU54b4K3Zbtkok90Bwox6b-upY0s-MuguU8RrUPHm4QnBM1bEOps7GsFa_AO43ZFv')"></div>
+<div class="absolute top-4 left-4">
+<span class="bg-secondary/90 text-on-primary px-3 py-1 rounded-full font-label-md text-[10px] uppercase tracking-wider backdrop-blur-sm shadow-sm">Success Story</span>
+</div>
+</div>
+<div class="p-5 flex-grow flex flex-col">
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-2 hover:text-secondary cursor-pointer transition-colors">How FinTech Startup 'X' Scaled Support 3x</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-4 line-clamp-2">A deep dive into deploying automated workflows to handle seasonal volume spikes seamlessly.</p>
+<div class="mt-auto flex items-center justify-between">
+<span class="font-label-md text-label-md text-tertiary">Oct 10, 2024</span>
+</div>
+</div>
+</article>
+</div>
+<!-- Pagination -->
+<div class="mt-12 flex justify-center items-center gap-2">
+<button class="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high transition-colors" disabled=""><span class="material-symbols-outlined" style="font-size: 20px;">chevron_left</span></button>
+<button class="w-10 h-10 rounded-full bg-primary-container text-on-primary-container font-label-md flex items-center justify-center">1</button>
+<button class="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center text-on-surface hover:bg-surface-container-high font-label-md transition-colors">2</button>
+<button class="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center text-on-surface hover:bg-surface-container-high font-label-md transition-colors">3</button>
+<span class="text-on-surface-variant">...</span>
+<button class="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center text-on-surface hover:bg-surface-container-high transition-colors"><span class="material-symbols-outlined" style="font-size: 20px;">chevron_right</span></button>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-lowest dark:bg-surface-dim border-t border-outline-variant dark:border-outline w-full py-8 mt-auto">
+<div class="flex flex-col md:flex-row justify-between items-center px-6 max-w-7xl mx-auto gap-4">
+<div class="flex items-center gap-2">
+<img alt="GTChat Logo" class="h-6 w-6 object-contain grayscale opacity-60" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCc0L3yRdfZcpoiKEZDVYZZcZGSYpUt6j1YW3XyCxbz_OkC_xiMG1zEdu1GrtLJcfz53kbMFT2cHlCCPR_vNRadTgV5py4xiIK_1Mml0DeYs8JfU0Yj18_7Q4SCgEHsJgyrEEiEkGvwB_6hj3BJHN2PQMjt_kOYVvEoMlE5thnTEguBYiV0UQFKx0WOyfzWUdoz2tdtv7N45HJhRjKfnNpc8ZjIzvuVXJ2k4SNYx1xsalagjBYCKN6-7ghc0OlgB9D9L_wAvqmvBMfC"/>
+<span class="font-headline-sm text-headline-sm text-primary">GTChat</span>
+</div>
+<div class="flex gap-6">
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-secondary transition-colors hover:underline decoration-secondary" href="#">Privacy Policy</a>
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-secondary transition-colors hover:underline decoration-secondary" href="#">Terms of Service</a>
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-secondary transition-colors hover:underline decoration-secondary" href="#">API Documentation</a>
+<a class="font-body-sm text-body-sm text-on-surface-variant hover:text-secondary transition-colors hover:underline decoration-secondary" href="#">Contact Us</a>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface dark:text-on-surface-variant">© 2024 GTChat AI. All rights reserved.</p>
+</div>
+</footer>
+</body></html>
