@@ -434,3 +434,5 @@ export function DiagnosticCard({ title, value }: { title: string; value: string 
 No desktop, o editor usa biblioteca de `280px`, canvas flexível e inspetor de `310px`. Em telas menores, os painéis são empilhados e todas as ações permanecem acessíveis.
 
 Seleção de seção usa contorno azul; seleção de elemento usa verde. Novos elementos devem entrar no contrato `BuilderElementType`, receber defaults, campos de propriedades, renderização pública, responsividade, validação e testes. Todos devem reutilizar os tokens globais de cor, tipografia, raio e sombra.
+
+Durante o arraste, widgets usam cursor `grab`/`grabbing` e o destino recebe contorno tracejado na cor principal. O alvo deve permanecer visível em colunas vazias, com altura mínima de `64px`. Editores de itens compostos usam um cartão discreto por item, campos separados e ação de exclusão com rótulo acessível.

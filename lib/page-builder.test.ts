@@ -1,5 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { builderDocumentSchema, defaultHomeDocument, ELEMENT_LIBRARY, parseBuilderDocument, SECTION_TEMPLATES } from "./page-builder";
+import {
+  builderDocumentSchema,
+  defaultHomeDocument,
+  ELEMENT_LIBRARY,
+  parseBuilderDocument,
+  parsePairedItem,
+  SECTION_TEMPLATES,
+} from "./page-builder";
 
 describe("construtor de páginas", () => {
   it("oferece uma biblioteca ampla de elementos e modelos", () => {
@@ -8,10 +15,24 @@ describe("construtor de páginas", () => {
   });
 
   it("gera uma página inicial válida", () => {
-    expect(builderDocumentSchema.safeParse(defaultHomeDocument()).success).toBe(true);
+    expect(builderDocumentSchema.safeParse(defaultHomeDocument()).success).toBe(
+      true,
+    );
   });
 
   it("recusa documentos inválidos ao carregar", () => {
-    expect(parseBuilderDocument('{"version":2,"sections":[]}')).toEqual({ version: 1, sections: [] });
+    expect(parseBuilderDocument('{"version":2,"sections":[]}')).toEqual({
+      version: 1,
+      sections: [],
+    });
+  });
+
+  it("separa título e descrição de itens compostos", () => {
+    expect(
+      parsePairedItem("Atendimento|Todos os canais em um só lugar"),
+    ).toEqual({
+      title: "Atendimento",
+      description: "Todos os canais em um só lugar",
+    });
   });
 });

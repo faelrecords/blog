@@ -27,6 +27,7 @@ import {
   createElement,
   createSection,
   ELEMENT_LIBRARY,
+  parsePairedItem,
   SECTION_TEMPLATES,
   uid,
   type BuilderDocument,
@@ -65,9 +66,18 @@ type Selection = {
 type Field = {
   key: string;
   label: string;
-  kind?: "text" | "textarea" | "url" | "number" | "list" | "select";
+  kind?: "text" | "textarea" | "url" | "number" | "list" | "pairs" | "select";
+  pairLabels?: [string, string];
   options?: { label: string; value: string | number }[];
 };
+type DragItem =
+  | { kind: "new"; type: BuilderElementType }
+  | {
+      kind: "existing";
+      sectionId: string;
+      columnId: string;
+      elementId: string;
+    };
 
 const fields: Partial<Record<BuilderElementType, Field[]>> = {
   heading: [
@@ -121,7 +131,12 @@ const fields: Partial<Record<BuilderElementType, Field[]>> = {
   ],
   features: [
     { key: "title", label: "Título" },
-    { key: "items", label: "Benefícios (um por linha)", kind: "list" },
+    {
+      key: "items",
+      label: "Benefícios",
+      kind: "pairs",
+      pairLabels: ["Título", "Descrição"],
+    },
   ],
   stats: [{ key: "items", label: "Indicadores (valor|legenda)", kind: "list" }],
   testimonials: [
@@ -131,7 +146,12 @@ const fields: Partial<Record<BuilderElementType, Field[]>> = {
   ],
   faq: [
     { key: "title", label: "Título" },
-    { key: "items", label: "Perguntas (pergunta|resposta)", kind: "list" },
+    {
+      key: "items",
+      label: "Perguntas",
+      kind: "pairs",
+      pairLabels: ["Pergunta", "Resposta"],
+    },
   ],
   cta: [
     { key: "title", label: "Título" },
@@ -173,6 +193,8 @@ export function PageBuilderEditor({
   const [query, setQuery] = useState("");
   const [saveState, setSaveState] = useState("Tudo salvo");
   const [busy, setBusy] = useState(false);
+  const [dragItem, setDragItem] = useState<DragItem | null>(null);
+  const [dropTargetId, setDropTargetId] = useState("");
   const [versions, setVersions] = useState<
     { id: number; label: string; created_at: string; author_name: string }[]
   >([]);
@@ -248,6 +270,64 @@ export function PageBuilderEditor({
       );
     }
     setRightTab("content");
+  }
+  function placeDraggedItem(
+    targetSectionId: string,
+    targetColumnId: string,
+    beforeElementId?: string,
+  ) {
+    if (!dragItem) return;
+    if (
+      dragItem.kind === "existing" &&
+      dragItem.elementId === beforeElementId
+    ) {
+      setDragItem(null);
+      setDropTargetId("");
+      return;
+    }
+
+    const next = structuredClone(document);
+    let element: BuilderElement | undefined;
+    if (dragItem.kind === "new") {
+      element = createElement(dragItem.type);
+    } else {
+      const sourceSection = next.sections.find(
+        (item) => item.id === dragItem.sectionId,
+      );
+      const sourceColumn = sourceSection?.columns.find(
+        (item) => item.id === dragItem.columnId,
+      );
+      const sourceIndex =
+        sourceColumn?.elements.findIndex(
+          (item) => item.id === dragItem.elementId,
+        ) ?? -1;
+      if (!sourceColumn || sourceIndex < 0) return;
+      [element] = sourceColumn.elements.splice(sourceIndex, 1);
+    }
+
+    const targetSection = next.sections.find(
+      (item) => item.id === targetSectionId,
+    );
+    const targetColumn = targetSection?.columns.find(
+      (item) => item.id === targetColumnId,
+    );
+    if (!element || !targetSection || !targetColumn) return;
+    const targetIndex = beforeElementId
+      ? targetColumn.elements.findIndex((item) => item.id === beforeElementId)
+      : -1;
+    targetColumn.elements.splice(
+      targetIndex >= 0 ? targetIndex : targetColumn.elements.length,
+      0,
+      element,
+    );
+    apply(next, {
+      sectionId: targetSection.id,
+      columnId: targetColumn.id,
+      elementId: element.id,
+    });
+    setRightTab("content");
+    setDragItem(null);
+    setDropTargetId("");
   }
   function addLayout(columns: number) {
     const section = createSection(createElement("heading"), columns);
@@ -588,7 +668,20 @@ export function PageBuilderEditor({
               </div>
               <div className="element-library">
                 {filteredElements.map((item) => (
-                  <button key={item.type} onClick={() => addElement(item.type)}>
+                  <button
+                    key={item.type}
+                    draggable
+                    onDragStart={(event) => {
+                      event.dataTransfer.effectAllowed = "copy";
+                      event.dataTransfer.setData("text/plain", item.type);
+                      setDragItem({ kind: "new", type: item.type });
+                    }}
+                    onDragEnd={() => {
+                      setDragItem(null);
+                      setDropTargetId("");
+                    }}
+                    onClick={() => addElement(item.type)}
+                  >
                     <Plus size={16} />
                     <strong>{item.label}</strong>
                     <small>{item.category}</small>
@@ -606,7 +699,9 @@ export function PageBuilderEditor({
                   <small>{item.description}</small>
                 </button>
               ))}
-              {reusable.length > 0 && <h3 className="reusable-title">Meus modelos</h3>}
+              {reusable.length > 0 && (
+                <h3 className="reusable-title">Meus modelos</h3>
+              )}
               {reusable.map((item) => (
                 <div className="reusable-template" key={`reusable-${item.id}`}>
                   <button onClick={() => addReusable(item)}>
@@ -614,7 +709,13 @@ export function PageBuilderEditor({
                     <span>Reutilizável</span>
                     <small>Modelo salvo por sua equipe</small>
                   </button>
-                  <button className="reusable-delete" onClick={() => deleteReusable(item)} aria-label={`Excluir modelo ${item.name}`}><Trash2 size={14}/></button>
+                  <button
+                    className="reusable-delete"
+                    onClick={() => deleteReusable(item)}
+                    aria-label={`Excluir modelo ${item.name}`}
+                  >
+                    <Trash2 size={14} />
+                  </button>
                 </div>
               ))}
             </div>
@@ -651,10 +752,16 @@ export function PageBuilderEditor({
                     >
                       <ArrowDown size={14} />
                     </button>
-                    <button onClick={() => duplicateSection(section)} title="Duplicar seção">
+                    <button
+                      onClick={() => duplicateSection(section)}
+                      title="Duplicar seção"
+                    >
                       <Copy size={14} />
                     </button>
-                    <button onClick={() => saveReusable(section)} title="Salvar como modelo">
+                    <button
+                      onClick={() => saveReusable(section)}
+                      title="Salvar como modelo"
+                    >
                       <BookmarkPlus size={14} />
                     </button>
                   </div>
@@ -684,7 +791,79 @@ export function PageBuilderEditor({
           )}
         </aside>
         <main
-          className="page-builder-canvas"
+          className={`page-builder-canvas ${dragItem ? "is-dragging" : ""}`}
+          onDragStart={(event) => {
+            const target = event.target as HTMLElement;
+            const element = target.closest<HTMLElement>("[data-element]");
+            const section = target.closest<HTMLElement>("[data-section]");
+            const column = target.closest<HTMLElement>("[data-column]");
+            if (!element || !section || !column) return;
+            event.dataTransfer.effectAllowed = "move";
+            event.dataTransfer.setData("text/plain", element.dataset.element!);
+            setDragItem({
+              kind: "existing",
+              sectionId: section.dataset.section!,
+              columnId: column.dataset.column!,
+              elementId: element.dataset.element!,
+            });
+          }}
+          onDragOver={(event) => {
+            if (!dragItem) return;
+            event.preventDefault();
+            event.dataTransfer.dropEffect =
+              dragItem.kind === "new" ? "copy" : "move";
+            const target = event.target as HTMLElement;
+            const element = target.closest<HTMLElement>("[data-element]");
+            const column = target.closest<HTMLElement>("[data-column]");
+            setDropTargetId(
+              element?.dataset.element || column?.dataset.column || "canvas",
+            );
+          }}
+          onDrop={(event) => {
+            if (!dragItem) return;
+            event.preventDefault();
+            const target = event.target as HTMLElement;
+            const element = target.closest<HTMLElement>("[data-element]");
+            const section = target.closest<HTMLElement>("[data-section]");
+            const column = target.closest<HTMLElement>("[data-column]");
+            if (section && column) {
+              const insertAfter =
+                element &&
+                event.clientY >
+                  element.getBoundingClientRect().top +
+                    element.getBoundingClientRect().height / 2;
+              const nextElement = insertAfter
+                ? element.nextElementSibling?.closest<HTMLElement>(
+                    "[data-element]",
+                  )
+                : element;
+              placeDraggedItem(
+                section.dataset.section!,
+                column.dataset.column!,
+                nextElement?.dataset.element,
+              );
+            } else if (dragItem.kind === "new") {
+              const created = createElement(dragItem.type);
+              const createdSection = createSection(created);
+              apply(
+                {
+                  ...document,
+                  sections: [...document.sections, createdSection],
+                },
+                {
+                  sectionId: createdSection.id,
+                  columnId: createdSection.columns[0].id,
+                  elementId: created.id,
+                },
+              );
+              setDragItem(null);
+              setDropTargetId("");
+            }
+          }}
+          onDragEnd={() => {
+            setDragItem(null);
+            setDropTargetId("");
+          }}
           onClick={(event) => {
             const target = event.target as HTMLElement;
             const element = target.closest<HTMLElement>("[data-element]");
@@ -706,6 +885,8 @@ export function PageBuilderEditor({
               categories={categories}
               selectedSectionId={selection?.sectionId}
               selectedElementId={selection?.elementId}
+              editable
+              dropTargetId={dropTargetId}
             />
             {!document.sections.length && (
               <div className="builder-empty-canvas">
@@ -748,7 +929,11 @@ export function PageBuilderEditor({
           </div>
           <div className="builder-panel-scroll">
             {rightTab === "page" ? (
-              <PageSettings page={page} setPage={setPage} archive={() => save("archive")} />
+              <PageSettings
+                page={page}
+                setPage={setPage}
+                archive={() => save("archive")}
+              />
             ) : rightTab === "history" ? (
               <VersionList versions={versions} restore={restore} />
             ) : selectedElement ? (
@@ -834,7 +1019,11 @@ function PageSettings({
       <p className="muted">
         Status atual: <strong>{page.status}</strong>
       </p>
-      {!page.is_home && <button className="btn btn-danger" type="button" onClick={archive}>Arquivar página</button>}
+      {!page.is_home && (
+        <button className="btn btn-danger" type="button" onClick={archive}>
+          Arquivar página
+        </button>
+      )}
     </div>
   );
 }
@@ -1002,6 +1191,65 @@ function ContentField({
   value: unknown;
   update: (value: unknown) => void;
 }) {
+  if (field.kind === "pairs") {
+    const items = Array.isArray(value) ? value.map(String) : [];
+    const labels = field.pairLabels || ["Título", "Descrição"];
+    const updatePair = (index: number, part: 0 | 1, nextValue: string) => {
+      const next = [...items];
+      const pair = parsePairedItem(next[index]);
+      next[index] =
+        part === 0
+          ? `${nextValue}|${pair.description}`
+          : `${pair.title}|${nextValue}`;
+      update(next);
+    };
+    return (
+      <div className="field">
+        <label>{field.label}</label>
+        <div className="paired-items-editor">
+          {items.map((item, index) => {
+            const pair = parsePairedItem(item);
+            return (
+              <div className="paired-item" key={index}>
+                <input
+                  className="input"
+                  aria-label={`${labels[0]} ${index + 1}`}
+                  placeholder={labels[0]}
+                  value={pair.title}
+                  onChange={(event) => updatePair(index, 0, event.target.value)}
+                />
+                <textarea
+                  className="textarea"
+                  aria-label={`${labels[1]} ${index + 1}`}
+                  placeholder={labels[1]}
+                  rows={3}
+                  value={pair.description}
+                  onChange={(event) => updatePair(index, 1, event.target.value)}
+                />
+                <button
+                  type="button"
+                  className="paired-item-delete"
+                  aria-label={`Excluir item ${index + 1}`}
+                  onClick={() =>
+                    update(items.filter((_, itemIndex) => itemIndex !== index))
+                  }
+                >
+                  <Trash2 size={15} />
+                </button>
+              </div>
+            );
+          })}
+          <button
+            type="button"
+            className="btn btn-outline paired-item-add"
+            onClick={() => update([...items, "Novo item|"])}
+          >
+            <Plus size={15} /> Adicionar item
+          </button>
+        </div>
+      </div>
+    );
+  }
   const current =
     field.kind === "list"
       ? Array.isArray(value)

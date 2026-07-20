@@ -449,6 +449,10 @@ O documento versionado segue `Página → Seções → Colunas → Elementos`.
 
 `draft_json` e `published_json` são separados. Autosave nunca altera o conteúdo público; somente publicar atualiza `published_json`.
 
+O arrastar e soltar trabalha sobre IDs de seção, coluna e elemento. A biblioteca cria um novo elemento no destino; elementos já existentes são removidos da origem e inseridos na posição indicada dentro da mesma atualização imutável do documento. Colunas vazias continuam sendo destinos válidos. O histórico recebe a operação completa, permitindo desfazer e refazer sem estados intermediários.
+
+Listas com dois campos, como benefícios e perguntas frequentes, continuam compactas no JSON (`título|descrição`). A função `parsePairedItem` centraliza a leitura e mantém compatibilidade com itens antigos que tinham apenas título.
+
 | Tabela | Responsabilidade |
 |---|---|
 | `pages` | Metadados, SEO, rascunho e publicação |

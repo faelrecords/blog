@@ -562,12 +562,19 @@ Substitui o antigo bloco de usuário no rodapé da barra lateral. Recebe `user: 
 
 Editor em três painéis usado exclusivamente em `/admin/paginas/[id]/editor`. Recebe metadados da página, `BuilderDocument`, artigos, categorias e modelos reutilizáveis. Oferece layouts de uma a quatro colunas, 16 elementos, 10 modelos, undo/redo, autosave, upload, responsividade, SEO, publicação e versões.
 
+Os elementos da biblioteca podem ser clicados ou arrastados. Ao arrastar, podem ser inseridos antes ou depois de outro elemento e também movidos entre colunas. O clique continua disponível como alternativa acessível e adiciona o elemento à coluna selecionada.
+
+Elementos com listas compostas usam o formato persistido `título|descrição`, mas o inspetor apresenta campos separados. Em `Benefícios`, cada item possui título e descrição editáveis; em `FAQ`, cada item possui pergunta e resposta.
+
 ## 20. `PageRenderer`
 
 Renderiza o mesmo `BuilderDocument` na prévia e no site público, sem HTML arbitrário.
 
 ```tsx
 <PageRenderer document={document} posts={posts} categories={categories} />
+
+// Somente dentro do editor
+<PageRenderer document={document} editable dropTargetId={dropTargetId} />
 ```
 
 ## 21. `AdminPagesManager`
