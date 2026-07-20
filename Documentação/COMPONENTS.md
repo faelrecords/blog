@@ -545,3 +545,5 @@ Gerenciadores completos de entidades usam o sufixo `Manager`.
 - `AssetField`: envia, substitui ou remove logo e favicon.
 
 Esses componentes são internos de `ThemeEditor` e não devem ser importados por outras páginas.
+
+O `ThemeEditor` usa uma área de trabalho em três colunas no desktop: biblioteca e estrutura à esquerda, página ao centro e configurações à direita. Em telas menores, as três áreas são empilhadas sem remover nenhuma função.
