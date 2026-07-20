@@ -258,7 +258,7 @@ sequenceDiagram
 9. Administrador aprova, agenda ou solicita alterações.
 10. Consultas públicas filtram somente conteúdo disponível.
 
-Na página `/artigos/[slug]`, a consulta `relatedPublicPosts()` busca até três artigos públicos, exclui o artigo aberto, prioriza a mesma categoria e completa posições restantes pela data de publicação. O resultado alimenta `RelatedPostsSidebar`; sem categoria, a consulta usa diretamente as publicações recentes. O menu é lateral e fixo no desktop, passando para baixo do artigo em tablet e celular.
+Na página `/artigos/[slug]`, a consulta `relatedPublicPosts()` busca até três artigos públicos, exclui o artigo aberto, prioriza a mesma categoria e completa posições restantes pela data de publicação. `publicCategorySummaries()` agrega todas as categorias com a quantidade de posts públicos, inclusive categorias ainda vazias, e `publicPostCount()` calcula o total geral. O resultado alimenta `RelatedPostsSidebar`, que reúne pesquisa, relacionados e categorias. Como os dados são lidos do SQLite durante a renderização dinâmica, categorias criadas ou excluídas no painel aparecem ou desaparecem automaticamente. O menu é lateral e fixo no desktop, passando para baixo do artigo em tablet e celular.
 
 ## 9. Fluxo do editor de aparência
 

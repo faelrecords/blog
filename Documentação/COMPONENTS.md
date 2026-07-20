@@ -178,15 +178,24 @@ Cards de entidade usam `<Entidade>Card`.
 
 ### `RelatedPostsSidebar`
 
-Exibe, à direita do artigo, até três publicações recentes, sempre excluindo o artigo atual. Publicações da mesma categoria aparecem primeiro; se não forem suficientes, a lista é completada com as mais recentes do blog. Em telas menores, o bloco deixa de ser fixo e aparece abaixo do conteúdo principal.
+Exibe, à direita do artigo, a pesquisa pública, até três publicações recentes e as categorias disponíveis com suas quantidades de posts públicos. Publicações da mesma categoria aparecem primeiro; se não forem suficientes, a lista é completada com as mais recentes do blog. As categorias são consultadas no SQLite a cada renderização e refletem automaticamente criações, exclusões e novos posts. Em telas menores, os blocos deixam de ser fixos e aparecem abaixo do conteúdo principal.
 
 | Prop | Tipo | Obrigatória | Descrição |
 |---|---|---:|---|
 | `posts` | `PublicPost[]` | Sim | Artigos públicos já filtrados e ordenados |
 | `categoryName` | `string \| null` | Sim | Categoria usada no título contextual |
+| `categorySlug` | `string \| null` | Sim | Categoria atual destacada na navegação |
+| `categories` | `PublicCategorySummary[]` | Sim | Categorias e contagens de posts visíveis |
+| `totalPosts` | `number` | Sim | Total de artigos públicos para o atalho geral |
 
 ```tsx
-<RelatedPostsSidebar posts={relatedPosts} categoryName={post.category_name} />
+<RelatedPostsSidebar
+  posts={relatedPosts}
+  categoryName={post.category_name}
+  categorySlug={post.category_slug}
+  categories={publicCategorySummaries()}
+  totalPosts={publicPostCount()}
+/>
 ```
 
 Não use este componente em grades da home ou do arquivo; nesses casos use `PostCard`.

@@ -127,6 +127,14 @@ export type PublicPost = {
   author_name: string;
 };
 
+export type PublicCategorySummary = {
+  id: number;
+  name: string;
+  slug: string;
+  color: string;
+  post_count: number;
+};
+
 export function getSettings() {
   const rows = db.prepare("SELECT key, value FROM site_settings").all() as {
     key: string;
@@ -172,6 +180,32 @@ export function publicPosts(limit = 12, category?: string, query?: string) {
       `SELECT p.*, c.name category_name, c.slug category_slug, c.color category_color, u.name author_name FROM posts p JOIN users u ON u.id=p.author_id LEFT JOIN categories c ON c.id=p.category_id WHERE ${where.join(" AND ")} ORDER BY COALESCE(p.published_at,p.scheduled_at) DESC LIMIT ?`,
     )
     .all(...params) as PublicPost[];
+}
+
+export function publicCategorySummaries() {
+  return db
+    .prepare(
+      `SELECT c.id, c.name, c.slug, c.color, COUNT(p.id) post_count
+       FROM categories c
+       LEFT JOIN posts p
+         ON p.category_id = c.id
+        AND ((p.status = 'publicado') OR (p.status = 'agendado' AND p.scheduled_at <= datetime('now')))
+       GROUP BY c.id, c.name, c.slug, c.color
+       ORDER BY c.name COLLATE NOCASE`,
+    )
+    .all() as PublicCategorySummary[];
+}
+
+export function publicPostCount() {
+  const row = db
+    .prepare(
+      `SELECT COUNT(*) total
+       FROM posts
+       WHERE (status = 'publicado')
+          OR (status = 'agendado' AND scheduled_at <= datetime('now'))`,
+    )
+    .get() as { total: number };
+  return row.total;
 }
 
 export function relatedPublicPosts(

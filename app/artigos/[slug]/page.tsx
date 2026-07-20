@@ -4,7 +4,13 @@ import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
 import { RelatedPostsSidebar } from "@/components/related-posts-sidebar";
 import { NewsletterSignup } from "@/components/newsletter-signup";
-import { db, relatedPublicPosts, type PublicPost } from "@/lib/db";
+import {
+  db,
+  publicCategorySummaries,
+  publicPostCount,
+  relatedPublicPosts,
+  type PublicPost,
+} from "@/lib/db";
 import { getNewsletterSettings } from "@/lib/newsletter-db";
 
 function findPost(slug: string) {
@@ -41,6 +47,8 @@ export default async function ArticlePage({
   const post = findPost(slug);
   if (!post) notFound();
   const relatedPosts = relatedPublicPosts(post.id, post.category_slug, 3);
+  const categories = publicCategorySummaries();
+  const totalPosts = publicPostCount();
   const newsletter = getNewsletterSettings();
   const date = new Date(
     post.published_at || post.scheduled_at || Date.now(),
@@ -107,6 +115,9 @@ export default async function ArticlePage({
         <RelatedPostsSidebar
           posts={relatedPosts}
           categoryName={post.category_name}
+          categorySlug={post.category_slug}
+          categories={categories}
+          totalPosts={totalPosts}
         />
       </main>
       <SiteFooter />

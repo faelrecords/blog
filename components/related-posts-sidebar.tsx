@@ -1,16 +1,34 @@
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
-import type { PublicPost } from "@/lib/db";
+import { ArrowRight, Search } from "lucide-react";
+import type { PublicCategorySummary, PublicPost } from "@/lib/db";
 
 export function RelatedPostsSidebar({
   posts,
   categoryName,
+  categorySlug,
+  categories,
+  totalPosts,
 }: {
   posts: PublicPost[];
   categoryName: string | null;
+  categorySlug: string | null;
+  categories: PublicCategorySummary[];
+  totalPosts: number;
 }) {
   return (
-    <aside className="article-sidebar" aria-labelledby="related-posts-title">
+    <aside className="article-sidebar" aria-label="Conteúdo complementar">
+      <form className="article-sidebar-search" action="/artigos" role="search">
+        <Search size={18} aria-hidden="true" />
+        <input
+          type="search"
+          name="q"
+          aria-label="Pesquisar conteúdos"
+          placeholder="Pesquisar conteúdos"
+        />
+        <button type="submit" aria-label="Pesquisar">
+          <ArrowRight size={17} aria-hidden="true" />
+        </button>
+      </form>
       <div className="article-sidebar-inner">
         <span className="article-sidebar-kicker">
           {categoryName || "Continue lendo"}
@@ -57,6 +75,40 @@ export function RelatedPostsSidebar({
           Ver todos os artigos <ArrowRight size={16} />
         </Link>
       </div>
+      <nav
+        className="article-sidebar-categories"
+        aria-labelledby="article-categories-title"
+      >
+        <h2 id="article-categories-title">Categorias</h2>
+        <div className="article-category-list">
+          <Link href="/artigos">
+            <span>Todos os artigos</span>
+            <strong aria-label={`${totalPosts} artigos`}>{totalPosts}</strong>
+          </Link>
+          {categories.map((category) => {
+            const isCurrent = category.slug === categorySlug;
+            return (
+              <Link
+                href={`/artigos?categoria=${encodeURIComponent(category.slug)}`}
+                className={isCurrent ? "is-current" : undefined}
+                aria-current={isCurrent ? "page" : undefined}
+                key={category.id}
+              >
+                <span>
+                  <i
+                    aria-hidden="true"
+                    style={{ background: category.color || "var(--primary)" }}
+                  />
+                  {category.name}
+                </span>
+                <strong aria-label={`${category.post_count} artigos`}>
+                  {category.post_count}
+                </strong>
+              </Link>
+            );
+          })}
+        </div>
+      </nav>
     </aside>
   );
 }

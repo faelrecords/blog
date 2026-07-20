@@ -285,6 +285,9 @@ Regras:
 - data curta acima do título;
 - separador entre itens, sem excesso de sombras;
 - bloco lateral com largura máxima de `320px` e posição fixa abaixo do cabeçalho;
+- pesquisa em campo compacto com ícone, label acessível e botão de envio visível;
+- categorias em painel separado abaixo dos relacionados, com indicador de cor, contador e destaque da categoria atual;
+- a coluna recebe rolagem interna quando sua altura ultrapassa a janela, evitando conteúdo inacessível;
 - abaixo de `980px`, o bloco passa para baixo do artigo e ocupa a largura disponível.
 
 ### Newsletter
