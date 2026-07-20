@@ -499,4 +499,3 @@ Interfaces que concentram listagem e mutações usam `<Entidade>Manager`.
 5. Reutilizar classes e tokens existentes.
 6. Documentar acessibilidade e estados.
 7. Adicionar o componente a este catálogo.
-

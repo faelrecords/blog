@@ -663,4 +663,3 @@ export async function POST(request: NextRequest) {
 8. Retornar erros em português com formato `{ "error": "..." }`.
 9. Usar `200` para leitura/atualização, `201` para criação nova quando possível, `204` apenas sem corpo.
 10. Documentar o endpoint neste arquivo e adicionar testes.
-

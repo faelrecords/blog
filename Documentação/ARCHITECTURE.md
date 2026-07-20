@@ -425,4 +425,3 @@ Evoluções devem preservar compatibilidade e ser acompanhadas de migration, tes
 - [DESIGN-SYSTEM.md](./DESIGN-SYSTEM.md)
 - [RULES.md](./RULES.md)
 - [CLAUDE.md](./CLAUDE.md)
-

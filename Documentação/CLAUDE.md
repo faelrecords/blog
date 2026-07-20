@@ -250,4 +250,3 @@ Resposta recomendada:
 4. `API.md` — contratos HTTP.
 5. `COMPONENTS.md` — catálogo de componentes.
 6. `DESIGN-SYSTEM.md` — padrões visuais.
-

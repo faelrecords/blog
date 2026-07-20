@@ -219,4 +219,3 @@ Não criar uma segunda camada de arquitetura (`src/`, `services/`, `utils/`) sem
 - [ ] `git status` contém somente arquivos esperados.
 - [ ] Documentação afetada foi atualizada.
 - [ ] Nenhum segredo ou dado persistente entrou no commit.
-
