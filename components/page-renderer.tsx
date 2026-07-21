@@ -4,6 +4,7 @@ import {
   ArrowRight,
   ArrowUp,
   Check,
+  ChevronDown,
   Copy,
   Plus,
   Quote,
@@ -481,15 +482,30 @@ function ElementRenderer({
     return (
       <div className="built-faq" style={style}>
         <h2>{text(content.title, "Perguntas frequentes")}</h2>
-        {list(content.items).map((item, index) => {
-          const [question, answer] = item.split("|");
-          return (
-            <details key={`${question}-${index}`}>
-              <summary>{question}</summary>
-              <p>{answer}</p>
-            </details>
-          );
-        })}
+        <div className="built-faq-list">
+          {list(content.items).map((item, index) => {
+            const { title: question, description: answer } =
+              parsePairedItem(item);
+            return (
+              <details className="built-faq-item" key={`${question}-${index}`}>
+                <summary>
+                  <span className="built-faq-question">
+                    <small aria-hidden="true">
+                      {String(index + 1).padStart(2, "0")}
+                    </small>
+                    {question}
+                  </span>
+                  <span className="built-faq-disclosure" aria-hidden="true">
+                    <ChevronDown />
+                  </span>
+                </summary>
+                <div className="built-faq-answer">
+                  <p>{answer}</p>
+                </div>
+              </details>
+            );
+          })}
+        </div>
       </div>
     );
   if (element.type === "newsletter")

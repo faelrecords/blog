@@ -416,6 +416,20 @@ Exemplo:
 
 ## 17. Como criar componentes consistentes
 
+### Acabamento público inspirado no Apple HIG
+
+O arquivo `app/apple-public.css` adiciona uma camada visual exclusiva ao blog público e à prévia do construtor. Ela preserva as cores configuradas pelo administrador e aplica os seguintes princípios:
+
+- hierarquia tipográfica com títulos grandes, entrelinha compacta e textos com largura confortável;
+- fundos neutros, bastante espaço negativo e agrupamento por alinhamento antes de adicionar bordas;
+- materiais translúcidos somente em navegação e controles flutuantes;
+- cards de conteúdo sólidos, com bordas discretas, raios amplos e sombras suaves;
+- botões em cápsula, alvos de toque confortáveis e foco visível;
+- movimento curto e opcional, respeitando `prefers-reduced-motion`;
+- FAQ em duas colunas no desktop e uma no celular, com disclosure nativo acessível.
+
+Não copiar logos, ícones proprietários ou a identidade visual da Apple. A referência serve somente para decisões de hierarquia, materiais, espaçamento, legibilidade e interação.
+
 1. Identifique o componente existente mais próximo.
 2. Reutilize tokens CSS e classes base.
 3. Escolha um radius compatível com o tamanho do elemento.

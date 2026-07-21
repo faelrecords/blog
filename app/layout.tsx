@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import "./responsive.css";
+import "./apple-public.css";
 import { getSettings } from "@/lib/db";
 
 export const dynamic = "force-dynamic";

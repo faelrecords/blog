@@ -601,6 +601,8 @@ Elementos com listas compostas usam o formato persistido `título|descrição`, 
 
 Renderiza o mesmo `BuilderDocument` na prévia e no site público, sem HTML arbitrário.
 
+O elemento `faq` usa `details` e `summary` nativos, numeração visual, ícone de disclosure e resposta progressiva. No desktop, o título ocupa uma coluna própria e as perguntas ficam na coluna de interação; no celular, todo o conteúdo é empilhado. Não substitua essa estrutura por cliques em `div`, pois teclado, foco e leitores de tela dependem da semântica nativa.
+
 ```tsx
 <PageRenderer document={document} posts={posts} categories={categories} />
 

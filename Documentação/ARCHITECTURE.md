@@ -128,6 +128,7 @@ Usados onde há interação persistente ou API do navegador:
 ### CSS
 
 - `globals.css`: tokens, layout público, painel e editor.
+- `apple-public.css`: acabamento visual isolado do blog público e da prévia, inspirado em princípios do Apple HIG sem alterar a identidade GTChat.
 - `responsive.css`: drawers, editor de aparência e correções por breakpoint.
 - tokens configuráveis são aplicados como CSS Custom Properties no `<html>`.
 
