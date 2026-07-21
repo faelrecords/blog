@@ -418,7 +418,7 @@ Exemplo:
 
 ### Acabamento público inspirado no Apple HIG
 
-O arquivo `app/apple-public.css` adiciona uma camada visual exclusiva ao blog público e à prévia do construtor. Ela preserva as cores configuradas pelo administrador e aplica os seguintes princípios:
+O arquivo `app/apple-public.css` adiciona uma camada visual exclusiva ao blog público e à prévia do construtor. Ela preserva as cores configuradas pelo administrador, assim como a escala de espaçamentos, larguras e tipografia da diagramação original, e aplica os seguintes princípios:
 
 - hierarquia tipográfica com títulos grandes, entrelinha compacta e textos com largura confortável;
 - fundos neutros, bastante espaço negativo e agrupamento por alinhamento antes de adicionar bordas;
